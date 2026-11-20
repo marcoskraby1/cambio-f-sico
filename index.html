@@ -6,6 +6,7 @@
 <title>Cambio físico</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0d1014">
+<meta name="color-scheme" content="dark">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -212,6 +213,7 @@ html.nosc{overflow:hidden}
 .rd{width:42px;text-align:center;flex:none}.rd b{display:block;font-size:12px;color:var(--run);text-transform:capitalize}.rd span{font-size:12px;color:var(--mut);text-transform:capitalize}
 .rm{flex:1;min-width:0}.rt{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rs{font-size:12px;color:var(--mut);margin-top:2px}
 .rk{text-align:right;flex:none}.rk b{font-size:18px;font-weight:650}.rk span{font-size:11px;color:var(--mut);margin-left:3px}
+.lnks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.lnk{font-size:12.5px;font-weight:600;color:var(--run);text-decoration:none;border:1px solid rgba(79,209,197,.35);padding:7px 12px;border-radius:999px}
 </style>
 </head>
 <body>
@@ -278,7 +280,7 @@ const hev={list:new Map(),det:new Map()};
 const D={};
 let ver=0;
 const memo=fn=>{let v=-1,r;return()=>{if(v!==ver){r=fn();v=ver}return r}};
-const UI={wk:null,autoWk:null,open:new Set(),metric:'w',rW:30,rS:14};
+const UI={wk:null,autoWk:null,open:new Set(),metric:'w',rW:30,rS:7};
 const vib=(ms=8)=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
 
 /* ───────────── gráficos SVG ───────────── */
@@ -294,7 +296,7 @@ function lineChart(o){
   const X=x=>L+(x1===x0?.5:(x-x0)/(x1-x0))*(W-L-R),Y=y=>T+(1-(y-lo)/(hi-lo))*(H-T-B);
   let g='';
   ticks.forEach(t=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="rgba(255,255,255,.07)"/><text x="${L-7}" y="${Y(t)+4}" text-anchor="end" font-size="13.5" fill="#9aa4b5">${(o.fy||(v=>nf(v,1)))(t)}</text>`});
-  (o.xt||[]).forEach(t=>{g+=`<text x="${X(t.x)}" y="${H-8}" text-anchor="middle" font-size="13.5" fill="#9aa4b5">${esc(t.l)}</text>`});
+  (o.xt||[]).forEach(t=>{g+=`<text x="${X(t.x)}" y="${H-8}" text-anchor="${t.x>=x1-(x1-x0)*.04?'end':'middle'}" font-size="13.5" fill="#9aa4b5">${esc(t.l)}</text>`});
   (o.refs||[]).filter(r=>!o.refFit||(r.y>=lo&&r.y<=hi)).forEach(r=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(r.y)}" y2="${Y(r.y)}" stroke="${r.c||'#fbbf24'}" stroke-dasharray="5 4" opacity=".75"/><text x="${W-R-2}" y="${Y(r.y)-5}" text-anchor="end" font-size="13.5" fill="${r.c||'#fbbf24'}">${esc(r.l||'')}</text>`});
   o.series.forEach(s=>{
     const d=s.pts.map((p,i)=>(i?'L':'M')+X(p.x).toFixed(1)+' '+Y(p.y).toFixed(1)).join('');
@@ -385,7 +387,8 @@ T.resumen=function(){
     <div class="count"><div><div class="n">${dTest>0?dTest:'—'}</div><div class="t">días al test 3,5K (mar 8/12)</div></div>
     <div><div class="n">${dRace>0?dRace:'—'}</div><div class="t">días a la carrera (jue 31/12)</div></div>
     <div><div class="n">${r35?mmss(r35):'–'}</div><div class="t">${r35?'3,5K estimado ('+pace(r35,3500)+')':'3,5K estimado'}</div></div></div>
-    <div class="note">Objetivo 4:00/km · realista 4:05–4:10/km.</div></div></div>`;
+    <div class="note">Objetivo 4:00/km · realista 4:05–4:10/km.</div>
+    <div class="lnks"><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Test 3,5K','20261208','20261209','Test de 3,5K. Km1-2 a 4:08-4:10, sin salir más rápido.')}">+ Test en Google Calendar</a><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Carrera 3,5K','20261231','20270101','Objetivo 4:00/km (realista 4:05-4:10).')}">+ Carrera en Google Calendar</a></div></div></div>`;
   const kmWeek=runs.filter(x=>x.day>=ws).reduce((a,x)=>a+x.km,0),gW=gym.filter(x=>x.day>=ws).length;
   const tiles=`<div class="grid g4 mb">
    ${kpi('Pasos hoy',nf(st.total_steps,0),'','objetivo 10.000','neu')}
@@ -495,7 +498,7 @@ T.recuperacion=function(){
   const rch=lineChart({series:[{name:'FC reposo',color:'var(--rhr)',area:true,pts:rr.map(n=>({x:X(n.date),y:n.resting_heart_rate_bpm,tip:dShort(n.date)+' · '+n.resting_heart_rate_bpm+' ppm'}))}],refs:[{y:51,l:'alerta ≥51',c:'#f97316'}],xt:rr.filter((_,i)=>i%2===0).map(n=>({x:X(n.date),l:dShort(n.date)})),h:200,fy:v=>nf(v,0)});
   const fac=[['Sueño',rd.sleep_factor_percent],['Recuperación',rd.recovery_factor_percent],['Carga de entreno',rd.training_load_factor_percent],['VFC',rd.hrv_factor_percent],['Estrés (histórico)',rd.stress_history_factor_percent],['Sueño (histórico)',rd.sleep_history_factor_percent]];
   const fh=fac.map(([l,v])=>`<div class="goal"><div class="gh"><span style="color:var(--text)">${l}</span><span>${v??'–'}%</span></div><div class="bar"><i style="width:${v||0}%;background:${v>=75?'var(--good)':v>=55?'var(--wt)':'var(--warn)'}"></i></div></div>`).join('');
-  return `<div class="toolbar">${seg('rS',[[7,'7 días'],[14,'14 días']],UI.rS)}</div>`+kp+`<div class="grid g2" style="margin-bottom:14px">${sl}${hc}</div><div class="grid g2">${card('FC en reposo (noche)',rch,'ppm')}${card('Qué compone tu "preparado hoy"',fh,'Training Readiness '+(rd.score??'–'))}</div>`;
+  return `<div class="toolbar">${seg('rS',[[7,'Última semana'],[14,'2 semanas']],UI.rS)}</div>`+kp+`<div class="grid g2" style="margin-bottom:14px">${sl}${hc}</div><div class="grid g2">${card('FC en reposo (noche)',rch,'ppm')}${card('Qué compone tu "preparado hoy"',fh,'Training Readiness '+(rd.score??'–'))}</div>`;
 };
 T.cuerpo=function(){
   const ws=WEIGHTS(),ma=movAvg(ws);if(!ws.length)return card('Peso','<div class="empty">Sin pesajes</div>');
@@ -513,6 +516,7 @@ T.cuerpo=function(){
 /* ───────────── detalle de actividades ───────────── */
 const PLAN={0:['Torso',1,0],1:['Intervalos',0,1],2:['Empuje + Z2',1,1],3:['Tirón + core',1,0],4:['Pierna',1,0],5:['Descanso',0,0],6:['Tirada larga',0,1]};
 const W1='2026-10-26';
+const calUrl=(t,a,b,d)=>'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t)+'&dates='+a+'/'+b+'&details='+encodeURIComponent(d);
 const niceT=t=>String(t||'').toLowerCase().replace(/(^|-)(\p{L})/gu,(m,a,b)=>(a?' · ':'')+b.toUpperCase());
 const cleanRun=n=>String(n||'Carrera').replace(/^Miranda de Ebro - /,'');
 const inWeek=(d,ws)=>d>=ws&&d<=addDays(ws,6);
@@ -585,7 +589,8 @@ T.semana=function(){
   const td=today(),cw=weekStart(td);
   if(!UI.wk||UI.wk>cw)UI.wk=cw;if(UI.wk<W1)UI.wk=W1;
   const ws=UI.wk,we=addDays(ws,6),wn=weekNum(ws),ag=weekAgg(ws),pv=ws>W1?weekAgg(addDays(ws,-7)):null;DREF='S'+(wn-1);
-  const hdr=`<div class="wnav"><button class="btn sq" data-act="wk-prev" ${ws<=W1?'disabled':''} aria-label="Semana anterior">‹</button><div class="wt"><b>S${wn}${PHASE[wn]?' · '+PHASE[wn]:''}</b><span>${dShort(ws)} – ${dShort(we)}${ws===cw?' · esta semana':''}</span></div><button class="btn sq" data-act="wk-next" ${ws>=cw?'disabled':''} aria-label="Semana siguiente">›</button></div><div class="toolbar"><button class="btn sm" data-act="wk-now" ${ws===cw?'disabled':''}>Ir a hoy</button><button class="btn sm" data-act="exp">Expandir todo</button><button class="btn sm" data-act="col">Contraer todo</button></div>`;
+  const hdr=`<div class="wnav"><button class="btn sq" data-act="wk-prev" ${ws<=W1?'disabled':''} aria-label="Semana anterior">‹</button><div class="wt"><b>S${wn}${PHASE[wn]?' · '+PHASE[wn]:''}</b><span>${dShort(ws)} – ${dShort(we)}${ws===cw?' · esta semana':''}</span></div><button class="btn sq" data-act="wk-next" ${ws>=cw?'disabled':''} aria-label="Semana siguiente">›</button></div><div class="toolbar"><button class="btn sm" data-act="wk-now" ${ws===cw?'disabled':''}>Ir a hoy</button><button class="btn sm" data-act="exp">Expandir todo</button><button class="btn sm" data-act="col">Contraer todo</button><button class="btn sm" data-act="share">Compartir</button></div>`;
+  T._share=`Semana S${wn} (${dShort(ws)} – ${dShort(we)})\nCarrera: ${nf(ag.km,1)} km en ${ag.r.length} salidas\nFuerza: ${ag.g.length}/4 sesiones · ${nf(ag.vol/1000,1)} t\nSueño medio: ${ag.sleep!=null?nf(ag.sleep,1):'–'} h · VFC ${nf(ag.hrv,0)} ms · FC reposo ${nf(ag.rhr,0)}\nPeso medio: ${nf(ag.wt,1)} kg`;
   const dd=(c,p,dec,u,g)=>pv?dlt(c,p,dec,u,g):['',''];
   const all=ALL().filter(a=>inWeek(a.day,ws));
   const nightBy=Object.fromEntries(ag.ns.map(n=>[n.date,n])),hvBy=Object.fromEntries(ag.hv.map(h=>[h.date,h])),wtBy=Object.fromEntries(ag.wts.map(w=>[w.date,w]));
@@ -646,8 +651,9 @@ function openRun(id){
   const z=zoneOf(a.avg_hr_bpm);
   openSheet(`<div class="sht">${esc(cleanRun(a.name))}</div><div class="shs">${dWd(a.day)} ${dShort(a.day)} · ${(a.start_time||'').slice(11,16)}${z?` · FC media en <span class="zone" style="background:${z[1]}">${z[0]}</span>`:''}</div>${a.isRun?runDetail(a):otherDetail(a)}`);
 }
-function act(a){
+async function act(a,el){
   if(a==='close')return closeSheet();
+  if(a==='share'){const tx=T._share||'';try{if(navigator.share)await navigator.share({title:'Cambio físico',text:tx});else{await navigator.clipboard.writeText(tx);if(el){el.textContent='Copiado ✓';setTimeout(()=>el.textContent='Compartir',1500)}}}catch(e){}return}
   if(a==='wk-prev'&&UI.wk>W1)UI.wk=addDays(UI.wk,-7);
   else if(a==='wk-next'&&UI.wk<weekStart(today()))UI.wk=addDays(UI.wk,7);
   else if(a==='wk-now')UI.wk=weekStart(today());
@@ -660,7 +666,7 @@ addEventListener('hashchange',()=>go(location.hash.slice(1)));
 document.addEventListener('click',e=>{
   let el;
   if((el=e.target.closest('[data-seg]'))){const v=el.dataset.v;UI[el.dataset.seg]=isNaN(v)?v:Number(v);vib();mark([cur],true);return}
-  if((el=e.target.closest('[data-act]'))){act(el.dataset.act);return}
+  if((el=e.target.closest('[data-act]'))){act(el.dataset.act,el);return}
   if((el=e.target.closest('[data-run]'))){openRun(el.dataset.run);return}
   if((el=e.target.closest('[data-go]'))){if(el.dataset.wk){UI.wk=el.dataset.wk;UI.autoWk=null}vib();go(el.dataset.go,true);return}
 });

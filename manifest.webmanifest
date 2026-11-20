@@ -1,17 +1,97 @@
 {
-  "name": "Cambio físico",
-  "short_name": "Cambio",
-  "description": "Panel de fuerza (Hevy) y carrera/recuperación (Garmin)",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "orientation": "portrait",
-  "lang": "es",
-  "background_color": "#07090d",
-  "theme_color": "#07090d",
-  "icons": [
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
-  ]
+ "name": "Cambio físico",
+ "short_name": "Cambio",
+ "description": "Panel de fuerza (Hevy) y carrera/recuperación (Garmin)",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "lang": "es",
+ "background_color": "#0d1014",
+ "theme_color": "#0d1014",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "icon-mono-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "monochrome"
+  }
+ ],
+ "id": "/cambio-f-sico/",
+ "categories": [
+  "health",
+  "fitness",
+  "sports"
+ ],
+ "display_override": [
+  "standalone"
+ ],
+ "shortcuts": [
+  {
+   "name": "Semana",
+   "short_name": "Semana",
+   "url": "./#semana",
+   "icons": [
+    {
+     "src": "icon-192.png",
+     "sizes": "192x192",
+     "type": "image/png"
+    }
+   ]
+  },
+  {
+   "name": "Fuerza",
+   "short_name": "Fuerza",
+   "url": "./#fuerza",
+   "icons": [
+    {
+     "src": "icon-192.png",
+     "sizes": "192x192",
+     "type": "image/png"
+    }
+   ]
+  },
+  {
+   "name": "Carrera",
+   "short_name": "Carrera",
+   "url": "./#carrera",
+   "icons": [
+    {
+     "src": "icon-192.png",
+     "sizes": "192x192",
+     "type": "image/png"
+    }
+   ]
+  },
+  {
+   "name": "Sueño",
+   "short_name": "Sueño",
+   "url": "./#recuperacion",
+   "icons": [
+    {
+     "src": "icon-192.png",
+     "sizes": "192x192",
+     "type": "image/png"
+    }
+   ]
+  }
+ ]
 }
