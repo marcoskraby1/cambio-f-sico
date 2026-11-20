@@ -653,6 +653,8 @@ const GK='cf_goals';
 const DEF_GOALS=[{id:'g1',t:'peso',kg:73.5,date:'2026-12-31'},{id:'g2',t:'fuerza',ex:'Press de Banca (Barra)',kg:80,reps:1},{id:'g3',t:'carrera',km:3.5,sec:840},{id:'g4',t:'carrera',km:5,sec:1200}];
 let GOALS=(()=>{try{const j=JSON.parse(localStorage.getItem(GK)||'null');if(Array.isArray(j))return j}catch(e){}return DEF_GOALS.map(g=>({...g}))})();
 const saveGoals=()=>{try{localStorage.setItem(GK,JSON.stringify(GOALS))}catch(e){}};
+/* objetivo de sueño: se añade una sola vez; si lo borras no vuelve */
+try{if(!GOALS.some(g=>g.t==='sueno')&&!localStorage.getItem('cf_sg')){GOALS.push({id:'g5',t:'sueno',h:7.3});saveGoals();localStorage.setItem('cf_sg','1')}}catch(e){}
 const num=v=>parseFloat(String(v).trim().replace(',','.'));
 function parseTime(v){const p=String(v).trim().replace(',','.').split(':').map(Number);if(!p.length||p.some(x=>isNaN(x)||x<0))return null;let t=0;if(p.length===1)t=p[0]*60;else if(p.length===2)t=p[0]*60+p[1];else if(p.length===3)t=p[0]*3600+p[1]*60+p[2];else return null;return t>0?Math.round(t):null}
 const fmtT=sec=>{sec=Math.round(sec);return sec>=3600?Math.floor(sec/3600)+':'+String(Math.floor(sec%3600/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0'):mmss(sec)};
@@ -669,6 +671,12 @@ function goalCalc(g){
     const days=g.date?diffDays(today(),g.date):null;
     return {title,pct,right:nf(cur,1)+' kg',note:rem<=0?'¡Objetivo conseguido!':`Faltan ${nf(rem,1)} kg`+(days>0?` · ritmo necesario ≈ ${nf(rem/days*7,2)} kg/semana`:days!=null?' · fecha pasada':'')+` · media 7 d`};
   }
+  if(g.t==='sueno'){
+    const title='Dormir '+nf(g.h,1)+' h por noche',ns=NIGHTS().slice(-7);
+    if(!ns.length)return {title,pct:0,right:'–',note:'Sin datos de sueño todavía'};
+    const avg=ns.reduce((a,n)=>a+n.sleep_hours,0)/ns.length;
+    return {title,pct:clamp(avg/g.h*100),right:nf(avg,1)+' h',note:avg>=g.h?'¡Objetivo conseguido!':`Faltan ${nf(g.h-avg,1)} h por noche · media ${ns.length} noches`};
+  }
   if(g.t==='fuerza'){
     const title=`${g.ex} · ${nf(g.kg)} kg × ${g.reps}`,ser=exerciseSeries(g.ex);
     if(!ser.length)return {title,pct:0,right:'–',note:'Sin datos de este ejercicio en Hevy (revisa el nombre)'};
@@ -681,20 +689,21 @@ function goalCalc(g){
   return {title,pct:clamp(g.sec/est*100),right:fmtT(est),note:`Estimado Garmin ${fmtT(est)} · ${est>g.sec?'faltan '+fmtT(est-g.sec):'¡al alcance!'} · ritmo objetivo ${pc}`};
 }
 function goalsHTML(edit){
-  const order={peso:0,fuerza:1,carrera:2};
+  const order={peso:0,sueno:1,fuerza:2,carrera:3};
   const list=GOALS.slice().sort((a,b)=>order[a.t]-order[b.t]);
   const rows=list.map(g=>{const c=goalCalc(g);return `<div class="goal${edit?' tap gedit':''}" ${edit?`data-gedit="${g.id}"`:''}><div class="gh"><b>${esc(c.title)}</b><span>${esc(c.right)}</span></div><div class="bar"><i style="width:${c.pct.toFixed(1)}%"></i></div><div class="note" style="margin:6px 0 0">${esc(c.note)}</div></div>`}).join('');
   return (rows||'<div class="empty">Sin objetivos todavía</div>')+(edit?'<button class="btn pri" data-gedit="new" style="width:100%;margin-top:12px;padding:12px">+ Añadir objetivo</button>':'');
 }
-const GT={peso:'Peso',fuerza:'Fuerza',carrera:'Carrera'};
+const GT={peso:'Peso',sueno:'Sueño',fuerza:'Fuerza',carrera:'Carrera'};
 function goalSheet(){
   const {g,isNew}=UI.gf,t=g.t;
   const names=[...new Set(W().flatMap(w=>(hev.det.get(w.id)?.exercises||[]).map(e=>e.title)))].sort((a,b)=>a.localeCompare(b,'es'));
   let f='';
   if(t==='peso')f=`<label>Peso objetivo (kg)<input name="kg" inputmode="decimal" value="${g.kg??''}" required placeholder="73,5"></label><label>Fecha límite (opcional)<input name="date" type="date" value="${g.date||''}"></label>`;
+  if(t==='sueno')f=`<label>Horas de sueño por noche<input name="h" inputmode="decimal" value="${g.h??''}" required placeholder="7,3"></label>`;
   if(t==='fuerza')f=`<label>Ejercicio (escribe y elige)<input name="ex" list="exl" value="${esc(g.ex||'')}" required autocomplete="off" placeholder="Press de Banca (Barra)"></label><datalist id="exl">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist><div class="frow"><label>Peso (kg)<input name="kg" inputmode="decimal" value="${g.kg??''}" required></label><label>Repeticiones<input name="reps" inputmode="numeric" value="${g.reps??''}" required></label></div>`;
   if(t==='carrera')f=`<div class="sub2">Distancias habituales</div><div class="pres">${[1,3.5,5,10,21.1,42.2].map(k=>`<button type="button" data-km="${k}">${nf(k,1)} km</button>`).join('')}</div><label>Distancia (km)<input name="km" id="kmin" inputmode="decimal" value="${g.km??''}" required placeholder="5"></label><label>Tiempo objetivo (mm:ss o h:mm:ss)<input name="time" inputmode="numeric" value="${g.sec?fmtT(g.sec):''}" required placeholder="20:00"></label>`;
-  const tabs=isNew?`<div style="margin:10px 0 2px"><div class="seg">${['peso','fuerza','carrera'].map(k=>`<button type="button" class="${k===t?'on':''}" data-gtype="${k}">${GT[k]}</button>`).join('')}</div></div>`:'';
+  const tabs=isNew?`<div style="margin:10px 0 2px"><div class="seg">${['peso','sueno','fuerza','carrera'].map(k=>`<button type="button" class="${k===t?'on':''}" data-gtype="${k}">${GT[k]}</button>`).join('')}</div></div>`:'';
   return `<div class="sht">${isNew?'Nuevo objetivo':'Editar objetivo · '+GT[t]}</div>${tabs}<form id="gform" autocomplete="off">${f}<div id="gerr" class="note wa" style="min-height:18px"></div><div class="frow" style="margin-top:6px"><button class="btn pri" type="submit" style="flex:2;padding:13px">Guardar</button>${isNew?'':'<button class="btn" type="button" data-act="gdel" style="flex:1;padding:13px;color:#fb7185">Borrar</button>'}</div></form>`;
 }
 function openGoal(id){
@@ -706,6 +715,7 @@ document.addEventListener('submit',e=>{
   const f=new FormData(e.target),{g,isNew}=UI.gf,err=m=>{document.getElementById('gerr').textContent=m};
   let n={id:g.id,t:g.t};
   if(g.t==='peso'){const kg=num(f.get('kg'));if(!(kg>30&&kg<250))return err('Escribe un peso válido en kg.');n.kg=kg;n.date=f.get('date')||''}
+  if(g.t==='sueno'){const h=num(f.get('h'));if(!(h>=4&&h<=12))return err('Escribe horas entre 4 y 12.');n.h=h}
   if(g.t==='fuerza'){const kg=num(f.get('kg')),reps=parseInt(f.get('reps'),10),ex=String(f.get('ex')).trim();if(!ex)return err('Elige un ejercicio.');if(!(kg>0&&kg<600))return err('Peso no válido.');if(!(reps>=1&&reps<=30))return err('Repeticiones: de 1 a 30.');Object.assign(n,{ex,kg,reps})}
   if(g.t==='carrera'){const km=num(f.get('km')),sec=parseTime(f.get('time'));if(!(km>0&&km<=250))return err('Distancia no válida.');if(!sec)return err('Tiempo no válido. Ejemplo: 20:00 o 1:45:00.');Object.assign(n,{km,sec})}
   if(isNew)GOALS.push(n);else GOALS=GOALS.map(x=>x.id===n.id?n:x);
