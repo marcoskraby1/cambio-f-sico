@@ -202,10 +202,16 @@ details[open]>summary .chev{transform:rotate(-135deg);margin-bottom:-3px}
 .shs{color:var(--mut);font-size:12.5px}
 html.nosc{overflow:hidden}
 @media(max-width:720px){
-  nav{position:fixed;left:0;right:0;bottom:0;top:auto;border-radius:0;border:0;border-top:1px solid var(--line);margin:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:#0f1317;z-index:30;gap:0}
-  nav a{flex-direction:column;gap:3px;padding:7px 2px;font-size:10.5px;border-radius:14px}
-  .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  nav{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));top:auto;border-radius:30px;border:1px solid rgba(255,255,255,.12);margin:0;padding:6px;background:rgba(22,27,34,.96);box-shadow:0 10px 30px rgba(0,0,0,.55);z-index:30;gap:2px}
+  nav a{flex-direction:column;gap:3px;padding:8px 2px;font-size:10.5px;border-radius:24px}
+  .wrap{padding-bottom:calc(108px + env(safe-area-inset-bottom))}
 }
+.rr{display:flex;align-items:center;gap:12px;padding:11px 4px;border-top:1px solid rgba(255,255,255,.06)}
+.rr:first-child{border-top:0}
+.rr:active{background:rgba(255,255,255,.04)}
+.rd{width:42px;text-align:center;flex:none}.rd b{display:block;font-size:12px;color:var(--run);text-transform:capitalize}.rd span{font-size:12px;color:var(--mut);text-transform:capitalize}
+.rm{flex:1;min-width:0}.rt{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rs{font-size:12px;color:var(--mut);margin-top:2px}
+.rk{text-align:right;flex:none}.rk b{font-size:18px;font-weight:650}.rk span{font-size:11px;color:var(--mut);margin-left:3px}
 </style>
 </head>
 <body>
@@ -233,7 +239,6 @@ html.nosc{overflow:hidden}
   <section class="tab" id="t-cuerpo"></section>
   <footer>Datos de Hevy y Garmin Connect, sincronizados cada 30 minutos y cifrados. <a href="#" id="chpass" style="color:var(--mut)">Cambiar clave</a></footer>
 </div>
-<div id="tip"></div>
 <div class="sheet" id="sheet" hidden><div class="sb" data-act="close"></div><div class="sp"><div class="grab" id="grab"></div><div id="shc"></div></div></div>
 <div id="lock" style="display:none;position:fixed;inset:0;z-index:100;background:var(--bg);place-items:center;padding:24px">
   <form id="lockform" class="card" style="max-width:360px;width:100%;text-align:center">
@@ -279,7 +284,7 @@ const vib=(ms=8)=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
 /* ───────────── gráficos SVG ───────────── */
 function niceTicks(lo,hi,n=4){const span=hi-lo||1,raw=span/n,p=Math.pow(10,Math.floor(Math.log10(raw)));const st=[1,2,2.5,5,10].map(m=>m*p).find(s=>s>=raw)||raw;const a=Math.floor(lo/st)*st,t=[];for(let v=a;v<=hi+st*.001;v+=st)t.push(+v.toFixed(6));return t}
 function lineChart(o){
-  const W=640,H=o.h||220,L=42,R=14,T=14,B=26;
+  const W=640,H=o.h||220,L=46,R=14,T=14,B=30;
   const all=o.series.flatMap(s=>s.pts.map(p=>p.y)).concat(o.refFit?[]:(o.refs||[]).map(r=>r.y));
   if(!all.length)return '<div class="empty">Sin datos todavía</div>';
   let lo=o.yMin??Math.min(...all),hi=o.yMax??Math.max(...all);
@@ -288,33 +293,33 @@ function lineChart(o){
   const xs=o.series.flatMap(s=>s.pts.map(p=>p.x));const x0=o.xMin??Math.min(...xs),x1=o.xMax??Math.max(...xs);
   const X=x=>L+(x1===x0?.5:(x-x0)/(x1-x0))*(W-L-R),Y=y=>T+(1-(y-lo)/(hi-lo))*(H-T-B);
   let g='';
-  ticks.forEach(t=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="rgba(255,255,255,.07)"/><text x="${L-7}" y="${Y(t)+4}" text-anchor="end" font-size="10.5" fill="#6b768b">${(o.fy||(v=>nf(v,1)))(t)}</text>`});
-  (o.xt||[]).forEach(t=>{g+=`<text x="${X(t.x)}" y="${H-7}" text-anchor="middle" font-size="10.5" fill="#6b768b">${esc(t.l)}</text>`});
-  (o.refs||[]).filter(r=>!o.refFit||(r.y>=lo&&r.y<=hi)).forEach(r=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(r.y)}" y2="${Y(r.y)}" stroke="${r.c||'#fbbf24'}" stroke-dasharray="5 4" opacity=".75"/><text x="${W-R-2}" y="${Y(r.y)-5}" text-anchor="end" font-size="10.5" fill="${r.c||'#fbbf24'}">${esc(r.l||'')}</text>`});
+  ticks.forEach(t=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="rgba(255,255,255,.07)"/><text x="${L-7}" y="${Y(t)+4}" text-anchor="end" font-size="13.5" fill="#9aa4b5">${(o.fy||(v=>nf(v,1)))(t)}</text>`});
+  (o.xt||[]).forEach(t=>{g+=`<text x="${X(t.x)}" y="${H-8}" text-anchor="middle" font-size="13.5" fill="#9aa4b5">${esc(t.l)}</text>`});
+  (o.refs||[]).filter(r=>!o.refFit||(r.y>=lo&&r.y<=hi)).forEach(r=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(r.y)}" y2="${Y(r.y)}" stroke="${r.c||'#fbbf24'}" stroke-dasharray="5 4" opacity=".75"/><text x="${W-R-2}" y="${Y(r.y)-5}" text-anchor="end" font-size="13.5" fill="${r.c||'#fbbf24'}">${esc(r.l||'')}</text>`});
   o.series.forEach(s=>{
     const d=s.pts.map((p,i)=>(i?'L':'M')+X(p.x).toFixed(1)+' '+Y(p.y).toFixed(1)).join('');
     if(s.area&&s.pts.length>1)g+=`<path d="${d}L${X(s.pts[s.pts.length-1].x)} ${H-B}L${X(s.pts[0].x)} ${H-B}Z" fill="${s.color}" opacity=".12"/>`;
     g+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.4}" ${s.dash?'stroke-dasharray="6 4"':''} stroke-linecap="round" stroke-linejoin="round"/>`;
     if(s.dots!==false)s.pts.forEach(p=>{g+=`<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="3.4" fill="${s.color}" stroke="#0b0f17" stroke-width="1.5"/>`});
-    s.pts.forEach(p=>{g+=`<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="11" fill="transparent" data-tip="${esc(p.tip||(s.name+': '+nf(p.y)))}"/>`});
+    s.pts.forEach(p=>{g+=`<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="11" fill="transparent"/>`});
   });
   return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img">${g}</svg>`;
 }
 function barChart(o){
-  const W=640,H=o.h||230,L=36,R=10,T=16,B=o.sub?44:28;
-  const items=o.items;if(!items.length)return '<div class="empty">Sin datos todavía</div>';
+  const items=o.items;const W=640,H=o.h||230,L=40,R=10,T=20,B=(o.sub||(items||[]).some(i=>i.sub))?50:32;
+  if(!items.length)return '<div class="empty">Sin datos todavía</div>';
   const mx=o.yMax||Math.max(...items.map(i=>i.segs.reduce((a,s)=>a+s.v,0)),...(o.refs||[]).map(r=>r.y))*1.12||1;
   const ticks=niceTicks(0,mx,4);const Y=v=>T+(1-v/mx)*(H-T-B);
   const bw=(W-L-R)/items.length;let g='';
-  ticks.forEach(t=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="rgba(255,255,255,.07)"/><text x="${L-6}" y="${Y(t)+4}" text-anchor="end" font-size="10.5" fill="#6b768b">${nf(t,1)}</text>`});
+  ticks.forEach(t=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="rgba(255,255,255,.07)"/><text x="${L-6}" y="${Y(t)+4}" text-anchor="end" font-size="13.5" fill="#9aa4b5">${nf(t,1)}</text>`});
   items.forEach((it,i)=>{
     const x=L+i*bw+bw*.16,w=bw*.68;let acc=0;
-    it.segs.forEach(s=>{if(s.v<=0)return;const y1=Y(acc+s.v),y0=Y(acc);g+=`<rect x="${x}" y="${y1}" width="${w}" height="${Math.max(0,y0-y1)}" rx="${it.segs.length>1?2:6}" fill="${s.c}" data-tip="${esc(s.tip||'')}"/>`;acc+=s.v});
-    if(it.top)g+=`<text x="${x+w/2}" y="${Y(acc)-5}" text-anchor="middle" font-size="10.5" font-weight="600" fill="#cdd5e3">${esc(it.top)}</text>`;
-    g+=`<text x="${x+w/2}" y="${H-B+14}" text-anchor="middle" font-size="10.5" fill="#8a94a8">${esc(it.label)}</text>`;
-    if(it.sub)g+=`<text x="${x+w/2}" y="${H-B+27}" text-anchor="middle" font-size="10" font-weight="600" fill="${it.subC||'#6b768b'}">${esc(it.sub)}</text>`;
+    it.segs.forEach(s=>{if(s.v<=0)return;const y1=Y(acc+s.v),y0=Y(acc);g+=`<rect x="${x}" y="${y1}" width="${w}" height="${Math.max(0,y0-y1)}" rx="${it.segs.length>1?2:6}" fill="${s.c}"/>`;acc+=s.v});
+    if(it.top)g+=`<text x="${x+w/2}" y="${Y(acc)-5}" text-anchor="middle" font-size="14.5" font-weight="700" fill="#cdd5e3">${esc(it.top)}</text>`;
+    g+=`<text x="${x+w/2}" y="${H-B+17}" text-anchor="middle" font-size="13.5" fill="#cdd5e3">${esc(it.label)}</text>`;
+    if(it.sub)g+=`<text x="${x+w/2}" y="${H-B+34}" text-anchor="middle" font-size="12.5" font-weight="600" fill="${it.subC||'#9aa4b5'}">${esc(it.sub)}</text>`;
   });
-  (o.refs||[]).forEach(r=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(r.y)}" y2="${Y(r.y)}" stroke="${r.c||'#fbbf24'}" stroke-dasharray="5 4" opacity=".8"/><text x="${L+2}" y="${Y(r.y)-5}" font-size="10.5" fill="${r.c||'#fbbf24'}">${esc(r.l||'')}</text>`});
+  (o.refs||[]).forEach(r=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(r.y)}" y2="${Y(r.y)}" stroke="${r.c||'#fbbf24'}" stroke-dasharray="5 4" opacity=".8"/>`});
   return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img">${g}</svg>`;
 }
 function ring(pct,color,big,small){
@@ -470,10 +475,10 @@ T.carrera=function(){
   const vch=lineChart({series:[{name:'VO₂máx',color:'var(--run)',area:true,pts:vo.map(x=>({x:Date.parse(x.date+'T12:00:00Z'),y:x.vo2_max,tip:dShort(x.date)+' · VO₂máx '+x.vo2_max}))}],yMin:51,yMax:54.5,refs:[{y:53.5,l:'previsión 31/12: 53–54',c:'#a78bfa'}],xt:vo.filter((_,i)=>i%Math.max(1,Math.ceil(vo.length/6))===0).map(x=>({x:Date.parse(x.date+'T12:00:00Z'),l:dShort(x.date)})),h:210,fy:v=>nf(v,1)});
   const stt=D.status||{};const mn=stt.optimal_chronic_load_min,mx=stt.optimal_chronic_load_max,ac=stt.acute_load,ch=stt.chronic_load;
   const sc=Math.max(mx||700,ac||0,ch||0)*1.1;const pc=v=>Math.min(100,v/sc*100);
-  const load=mx?`<div style="position:relative;height:34px;margin:14px 0 6px"><div style="position:absolute;inset:12px 0;background:rgba(255,255,255,.08);border-radius:99px"></div><div style="position:absolute;top:12px;bottom:12px;left:${pc(mn)}%;width:${pc(mx)-pc(mn)}%;background:rgba(34,197,94,.35);border-radius:99px" title="Rango óptimo"></div><div style="position:absolute;top:2px;left:calc(${pc(ac)}% - 6px);width:12px;height:30px;border-radius:6px;background:var(--run)" data-tip="Carga aguda ${ac}"></div><div style="position:absolute;top:8px;left:calc(${pc(ch)}% - 2px);width:4px;height:18px;border-radius:3px;background:#fff" data-tip="Carga crónica ${ch}"></div></div><div class="leg"><span style="--c:var(--run)">Aguda ${ac}</span><span style="--c:#fff">Crónica ${ch}</span><span style="--c:rgba(34,197,94,.6)">Óptimo ${nf(mn,0)}–${nf(mx,0)}</span></div><div class="note">Estado: ${esc(String(stt.training_status_feedback||'').replace(/_\d+$/,'').toLowerCase())} · equilibrio ${esc(String(stt.training_balance_feedback||'').toLowerCase())}</div>`:'<div class="empty">Sin datos</div>';
+  const load=mx?`<div style="position:relative;height:34px;margin:14px 0 6px"><div style="position:absolute;inset:12px 0;background:rgba(255,255,255,.08);border-radius:99px"></div><div style="position:absolute;top:12px;bottom:12px;left:${pc(mn)}%;width:${pc(mx)-pc(mn)}%;background:rgba(34,197,94,.35);border-radius:99px" title="Rango óptimo"></div><div style="position:absolute;top:2px;left:calc(${pc(ac)}% - 6px);width:12px;height:30px;border-radius:6px;background:var(--run)"></div><div style="position:absolute;top:8px;left:calc(${pc(ch)}% - 2px);width:4px;height:18px;border-radius:3px;background:#fff"></div></div><div class="leg"><span style="--c:var(--run)">Aguda ${ac}</span><span style="--c:#fff">Crónica ${ch}</span><span style="--c:rgba(34,197,94,.6)">Óptimo ${nf(mn,0)}–${nf(mx,0)}</span></div><div class="note">Estado: ${esc(String(stt.training_status_feedback||'').replace(/_\d+$/,'').toLowerCase())} · equilibrio ${esc(String(stt.training_balance_feedback||'').toLowerCase())}</div>`:'<div class="empty">Sin datos</div>';
   const pred=`<div class="grid g2" style="gap:10px">${[['5K',pr['5K']?.time],['10K',pr['10K']?.time],['Media',pr.half_marathon?.time],['Maratón',pr.marathon?.time]].map(([l,v])=>`<div><div style="font-weight:650;font-size:22px">${esc(v||'–')}</div><div class="note" style="margin:0">${l}</div></div>`).join('')}</div>`;
-  const rows=runs.slice(0,15).map(a=>{const z=zoneOf(a.avg_hr_bpm);return `<tr class="tap" data-run="${a.id}"><td>${dWd(a.day)} ${dShort(a.day)}</td><td>${esc((a.name||'').replace(/^Miranda de Ebro - /,''))}</td><td class="n">${nf(a.km,2)}</td><td class="n">${pace(a.duration_seconds,a.distance_meters)}</td><td class="n">${hms(a.duration_seconds)}</td><td class="n">${a.avg_hr_bpm?`<span class="zone" style="background:${z[1]}">${a.avg_hr_bpm} · ${z[0]}</span>`:'–'}</td><td class="n">${a.max_hr_bpm??'–'}</td></tr>`}).join('');
-  return kp+`<div class="grid g2" style="margin-bottom:14px">${card('Kilómetros por semana',bars)}${card('Evolución VO₂máx',vch,'Garmin · carrera')}</div><div class="grid g2" style="margin-bottom:14px">${card('Carga de entrenamiento',load)}${card('Predicciones de Garmin',pred,'según tu forma actual')}</div>`+card('Últimas carreras',`<div class="tw"><table><tr><th>Día</th><th>Sesión</th><th class="n">Km</th><th class="n">Ritmo</th><th class="n">Tiempo</th><th class="n">FC media</th><th class="n">FC máx</th></tr>${rows||'<tr><td colspan=7 class="empty">Sin carreras</td></tr>'}</table></div><div class="note">Toca una carrera para ver vueltas y zonas · zona de la FC media según tus zonas (Z2 147–157, Z4 170–181, Z5 ≥182).</div>`);
+  const rows=runs.slice(0,12).map(a=>{const z=zoneOf(a.avg_hr_bpm);return `<div class="rr tap" data-run="${a.id}"><div class="rd"><b>${dWd(a.day)}</b><span>${a.day.slice(8)} ${dShort(a.day).split(' ')[1]||''}</span></div><div class="rm"><div class="rt">${esc(cleanRun(a.name).replace(/^S\d+ \w+ - /,''))}</div><div class="rs">${pace(a.duration_seconds,a.distance_meters)} · ${hms(a.duration_seconds)}${a.avg_hr_bpm?` · FC ${a.avg_hr_bpm}`:''}</div></div><div class="rk"><b>${nf(a.km,1)}</b><span>km</span></div>${z&&a.avg_hr_bpm?`<span class="zone" style="background:${z[1]}">${z[0]}</span>`:''}</div>`}).join('');
+  return kp+`<div class="grid g2" style="margin-bottom:14px">${card('Kilómetros por semana',bars)}${card('Evolución VO₂máx',vch,'Garmin · carrera')}</div><div class="grid g2" style="margin-bottom:14px">${card('Carga de entrenamiento',load)}${card('Predicciones de Garmin',pred,'según tu forma actual')}</div>`+card('Últimas carreras',`${rows||'<div class="empty">Sin carreras</div>'}<div class="note">Toca una carrera para ver vueltas y zonas. La etiqueta es la zona de la FC media.</div>`);
 };
 T.recuperacion=function(){
   const ns=NIGHTS().slice(-UI.rS),rd=(D.readiness||[])[0]||{},st=D.stats||{};
@@ -481,7 +486,7 @@ T.recuperacion=function(){
     segs:[{v:h(n.deep_sleep_seconds),c:'var(--deep)',tip:`${dShort(n.date)} · profundo ${nf(h(n.deep_sleep_seconds))} h`},{v:h(n.light_sleep_seconds),c:'var(--light)',tip:`${dShort(n.date)} · ligero ${nf(h(n.light_sleep_seconds))} h`},{v:h(n.rem_sleep_seconds),c:'var(--rem)',tip:`${dShort(n.date)} · REM ${nf(h(n.rem_sleep_seconds))} h\nPuntuación ${n.sleep_score} · te dormiste ${bedLabel(n.sleep_start)}`},{v:h(n.awake_seconds),c:'var(--awake)',tip:'Despierto '+nf(h(n.awake_seconds),2)+' h'}]}});
   const l7=ns.slice(-7),bef=l7.filter(n=>!lateBed(n.sleep_start)).length,ah=avg(l7.map(n=>n.sleep_hours)),as=avg(l7.map(n=>n.sleep_score));
   const kp=`<div class="grid g4" style="margin-bottom:14px">${kpi('Sueño medio (7 noches)',nf(ah,1),'h','objetivo ≥ 7,3 h',ah>=7.3?'up':'wa')}${kpi('Puntuación media',nf(as,0),'','Garmin','neu')}${kpi('Dormido antes de 23:30',bef,'/7','objetivo ≥ 5 de 7',bef>=5?'up':'wa')}${kpi('Body Battery',nf(st.body_battery_current,0),'','estrés medio '+nf(st.avg_stress_level,0),'neu')}</div>`;
-  const sl=card('Sueño por noche',barChart({items,h:260,refs:[{y:7.3,l:'objetivo 7,3 h'}]})+`<div class="leg"><span style="--c:var(--deep)">Profundo</span><span style="--c:var(--light)">Ligero</span><span style="--c:var(--rem)">REM</span><span style="--c:var(--awake)">Despierto</span></div><div class="note">Debajo de cada barra: hora a la que te dormiste (naranja = pasada la 23:30).</div>`);
+  const sl=card('Sueño por noche',barChart({items,h:260,refs:[{y:7.3,l:'objetivo 7,3 h'}]})+`<div class="leg"><span style="--c:var(--deep)">Profundo</span><span style="--c:var(--light)">Ligero</span><span style="--c:var(--rem)">REM</span><span style="--c:var(--awake)">Despierto</span></div><div class="note">Línea punteada = objetivo 7,3 h. Debajo de cada barra: hora a la que te dormiste (naranja = pasada la 23:30).</div>`);
   const hv=(D.hrv?.trend||[]).slice().sort((a,b)=>a.date<b.date?-1:1).slice(-UI.rS);const X=d=>Date.parse(d+'T12:00:00Z');
   const xt=hv.filter((_,i)=>i%Math.max(1,Math.ceil(hv.length/6))===0).map(x=>({x:X(x.date),l:dShort(x.date)}));
   const hch=lineChart({series:[{name:'VFC noche',color:'var(--hrv)',pts:hv.map(x=>({x:X(x.date),y:x.last_night_avg_hrv_ms,tip:dShort(x.date)+' · VFC '+x.last_night_avg_hrv_ms+' ms'}))},{name:'Media semanal',color:'#e9edf5',dash:true,dots:false,w:1.8,pts:hv.map(x=>({x:X(x.date),y:x.weekly_avg_hrv_ms,tip:dShort(x.date)+' · media 7 d '+x.weekly_avg_hrv_ms+' ms'}))}],refs:[{y:78,l:'umbral 78',c:'#fbbf24'}],xt,h:220,fy:v=>nf(v,0)});
@@ -546,7 +551,7 @@ function lapsHTML(laps){
 function zonesHTML(zs){
   const tot=zs.reduce((a,z)=>a+z.s,0);if(!tot)return '';
   const col=n=>'var(--z'+Math.min(5,Math.max(1,n))+')';
-  return `<div class="sub2">Tiempo por zona de FC</div><div class="zbar">${zs.filter(z=>z.s>0).map(z=>`<i style="flex:${z.s};background:${col(z.z)}" data-tip="Z${z.z} · ${mmss(z.s)}"></i>`).join('')}</div><div class="zl">${zs.filter(z=>z.s>0).map(z=>`<span style="--c:${col(z.z)}">Z${z.z} ${mmss(z.s)} · ${Math.round(z.s/tot*100)}%</span>`).join('')}</div>`;
+  return `<div class="sub2">Tiempo por zona de FC</div><div class="zbar">${zs.filter(z=>z.s>0).map(z=>`<i style="flex:${z.s};background:${col(z.z)}"></i>`).join('')}</div><div class="zl">${zs.filter(z=>z.s>0).map(z=>`<span style="--c:${col(z.z)}">Z${z.z} ${mmss(z.s)} · ${Math.round(z.s/tot*100)}%</span>`).join('')}</div>`;
 }
 function runDetail(a){
   const det=D.rundet?.by_id?.[String(a.id)];
@@ -669,12 +674,7 @@ document.getElementById('t-semana').addEventListener('touchend',e=>{const t=e.ch
 let gy=0;const grab=document.getElementById('grab');
 grab.addEventListener('touchstart',e=>{gy=e.touches[0].clientY},{passive:true});
 grab.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-gy>50)closeSheet()},{passive:true});
-/* tooltip (limitado a un cuadro por frame) */
-const tip=document.getElementById('tip');let tipRaf=0,tipEv=null,tipHide=0;
-function drawTip(){tipRaf=0;const e=tipEv;const t=e.target.closest&&e.target.closest('[data-tip]');if(!t){tip.style.opacity=0;return}tip.textContent=t.getAttribute('data-tip');tip.style.opacity=1;const x=Math.min(innerWidth-tip.offsetWidth-8,Math.max(8,e.clientX+12)),y=Math.max(8,e.clientY-tip.offsetHeight-12);tip.style.left=x+'px';tip.style.top=y+'px';if(e.pointerType==='touch'){clearTimeout(tipHide);tipHide=setTimeout(()=>tip.style.opacity=0,2400)}}
-function showTip(e){tipEv=e;if(!tipRaf)tipRaf=requestAnimationFrame(drawTip)}
-document.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')showTip(e)});document.addEventListener('pointerdown',showTip);
-addEventListener('scroll',()=>{tip.style.opacity=0},{passive:true});
+
 
 /* ───────────── datos: data.enc.json (cifrado, generado cada 30 min) ───────────── */
 const DATA_URL='data.enc.json';
