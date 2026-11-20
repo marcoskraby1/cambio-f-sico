@@ -54,31 +54,31 @@ nav a:active{background:rgba(255,255,255,.06)}
 nav a.on{background:rgba(79,209,197,.16);color:#fff}
 nav a.on svg{stroke:var(--run)}
 section.tab{display:none}
-section.tab.on{display:block;animation:in .2s ease-out}
-@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+section.tab.on{display:block;animation:in .16s ease-out}
+@keyframes in{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){section.tab.on{animation:none}*{transition:none!important}}
-.grid{display:grid;gap:12px}
+.grid{display:grid;gap:10px}
 .g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .g21{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
 .mb{margin-bottom:12px}
 @media(max-width:860px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3,.g2,.g21{grid-template-columns:minmax(0,1fr)}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;min-width:0}
 .card h3{font-size:13px;font-weight:600;color:var(--mut);margin-bottom:12px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .card h3 small{font-size:11.5px;font-weight:500;color:var(--dim)}
-.kpi{padding:14px 16px}
+.kpi{padding:11px 13px}
 .kpi .l{color:var(--mut);font-size:12.5px;font-weight:500;order:-1;margin-bottom:6px}
 .kpi{display:flex;flex-direction:column}
-.kpi .v{font-size:28px;font-weight:650;letter-spacing:-.02em;line-height:1.1}
+.kpi .v{font-size:24px;font-weight:650;letter-spacing:-.02em;line-height:1.1}
 .kpi .v small{font-size:13px;font-weight:500;color:var(--mut);margin-left:3px;letter-spacing:0}
 .kpi .d{font-size:12px;margin-top:6px;font-weight:500}
 .up{color:var(--good)}.down{color:var(--rhr)}.neu{color:var(--mut)}.wa{color:var(--warn)}
-.count{display:flex;gap:22px;flex-wrap:wrap}
-.count .n{font-size:40px;font-weight:650;line-height:1;letter-spacing:-.03em}
-.count .t{font-size:12.5px;color:var(--mut);margin-top:5px;max-width:130px}
-.ring{position:relative;width:112px;height:112px;flex:none}
+.count{display:flex;gap:12px;flex-wrap:nowrap}.count>div{flex:1;min-width:0}
+.count .n{font-size:30px;font-weight:650;line-height:1;letter-spacing:-.03em}
+.count .t{font-size:11.5px;color:var(--mut);margin-top:4px}
+.ring{position:relative;width:92px;height:92px;flex:none}.ring svg{width:92px;height:92px}
 .ring svg{transform:rotate(-90deg)}
 .ring .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
-.ring .c b{font-size:30px;font-weight:650;display:block;line-height:1}
+.ring .c b{font-size:25px;font-weight:650;display:block;line-height:1}
 .ring .c span{font-size:11.5px;color:var(--mut)}
 .flex{display:flex;gap:16px;align-items:center}
 .week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
@@ -207,12 +207,14 @@ html.nosc{overflow:hidden}
 @media(max-width:720px){
   .live{flex-wrap:nowrap;gap:6px}.brand{min-width:0}h1{white-space:nowrap}header{margin-bottom:0}.brand .logo{width:34px;height:34px}.brand h1{font-size:17px}#subtitle{display:none}.pill{padding:5px 9px;font-size:11.5px}button.btn#refresh{padding:0;width:38px;height:34px;display:grid;place-items:center}button.btn#refresh svg{margin:0!important}.bt{display:none}
   nav{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));top:auto;border-radius:30px;border:1px solid rgba(255,255,255,.12);margin:0;padding:6px;background:rgba(22,27,34,.96);box-shadow:0 10px 30px rgba(0,0,0,.55);z-index:30;gap:2px}
-  nav a{flex-direction:column;gap:3px;padding:8px 2px;font-size:10.5px;border-radius:24px;transition:padding .2s}
-  nav{transition:left .22s,right .22s}
-  nav.mini{left:52px;right:52px}
-  nav.mini a{padding:11px 2px}
-  nav.mini a span{display:none}
-  nav.mini a svg{width:21px;height:21px}
+  nav a{flex-direction:column;gap:3px;padding:8px 2px;font-size:10.5px;border-radius:24px;transition:padding .28s cubic-bezier(.4,0,.2,1),gap .28s cubic-bezier(.4,0,.2,1),background .15s}
+  nav{transition:left .28s cubic-bezier(.4,0,.2,1),right .28s cubic-bezier(.4,0,.2,1)}
+  nav a span{max-height:14px;opacity:1;overflow:hidden;transition:max-height .28s cubic-bezier(.4,0,.2,1),opacity .18s}
+  nav a svg{transition:transform .28s cubic-bezier(.4,0,.2,1)}
+  nav.mini{left:56px;right:56px}
+  nav.mini a{padding:11px 2px;gap:0}
+  nav.mini a span{max-height:0;opacity:0}
+  nav.mini a svg{transform:scale(1.12)}
   body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(96px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 30%,rgba(9,10,12,0));pointer-events:none;z-index:28}
   .wrap{padding-bottom:calc(108px + env(safe-area-inset-bottom))}
 }
@@ -222,7 +224,7 @@ html.nosc{overflow:hidden}
 .rd{width:42px;text-align:center;flex:none}.rd b{display:block;font-size:12px;color:var(--run);text-transform:capitalize}.rd span{font-size:12px;color:var(--mut);text-transform:capitalize}
 .rm{flex:1;min-width:0}.rt{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rs{font-size:12px;color:var(--mut);margin-top:2px}
 .rk{text-align:right;flex:none}.rk b{font-size:18px;font-weight:650}.rk span{font-size:11px;color:var(--mut);margin-left:3px}
-.lnks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.lnk{font-size:12.5px;font-weight:600;color:var(--run);text-decoration:none;border:1px solid rgba(79,209,197,.35);padding:7px 12px;border-radius:999px}
+.lnks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.lnk{font-size:12px;font-weight:600;color:var(--run);text-decoration:none;border:1px solid rgba(79,209,197,.35);padding:6px 11px;border-radius:999px}
 .btn.pri{background:var(--run);color:#06120f;border:0}
 .sheet label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px;font-weight:600}
 .sheet input{width:100%;padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font:500 16px var(--font);color-scheme:dark}
@@ -405,7 +407,7 @@ T.resumen=function(){
     <div><div class="n">${dRace>0?dRace:'—'}</div><div class="t">días a la carrera (jue 31/12)</div></div>
     <div><div class="n">${r35?mmss(r35):'–'}</div><div class="t">${r35?'3,5K estimado ('+pace(r35,3500)+')':'3,5K estimado'}</div></div></div>
     <div class="note">Objetivo 4:00/km · realista 4:05–4:10/km.</div>
-    <div class="lnks"><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Test 3,5K','20261208','20261209','Test de 3,5K. Km1-2 a 4:08-4:10, sin salir más rápido.')}">+ Test en Google Calendar</a><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Carrera 3,5K','20261231','20270101','Objetivo 4:00/km (realista 4:05-4:10).')}">+ Carrera en Google Calendar</a></div></div></div>`;
+    <div class="lnks"><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Test 3,5K','20261208','20261209','Test de 3,5K. Km1-2 a 4:08-4:10, sin salir más rápido.')}">+ Calendario · test</a><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Carrera 3,5K','20261231','20270101','Objetivo 4:00/km (realista 4:05-4:10).')}">+ Calendario · carrera</a></div></div></div>`;
   const kmWeek=runs.filter(x=>x.day>=ws).reduce((a,x)=>a+x.km,0),gW=gym.filter(x=>x.day>=ws).length;
   const tiles=`<div class="grid g4 mb">
    ${kpi('Pasos hoy',nf(st.total_steps,0),'','objetivo 10.000','neu')}
@@ -414,8 +416,6 @@ T.resumen=function(){
    ${kpi('FC en reposo',nf(st.resting_heart_rate_bpm,0),'ppm','media 7 días '+nf(st.last_7_days_avg_resting_hr,0),st.resting_heart_rate_bpm>=51?'down':'up','recuperacion')}
    ${kpi('Sueño anoche',last?nf(last.sleep_hours,1):'–','h',last?`puntuación ${last.sleep_score} · dormido ${bedLabel(last.sleep_start)}`:'',last&&lateBed(last.sleep_start)?'wa':'up','recuperacion')}
    ${kpi('Body Battery',nf(st.body_battery_current,0),'/100','mín. '+nf(st.body_battery_lowest,0)+' · máx. '+nf(st.body_battery_highest,0),'neu','recuperacion')}
-   ${kpi('Carrera esta semana',nf(kmWeek,1),'km',runs.filter(x=>x.day>=ws).length+' salidas','neu','semana')}
-   ${kpi('Fuerza esta semana',gW,'/4','sesiones en Hevy',gW>=4?'up':'neu','semana')}
   </div>`;
   const lr=runs[0],lg=gym[0];
   const lastC=`<div class="grid g2 mb">
@@ -486,7 +486,6 @@ T.carrera=function(){
   const wk={};runs.forEach(x=>{const k=weekStart(x.day);wk[k]=(wk[k]||0)+x.km});
   const ks=Object.keys(wk).sort().slice(-8);
   const bars=barChart({items:ks.map(k=>({label:'S'+weekNum(k),sub:dShort(k),top:nf(wk[k],1),segs:[{v:wk[k],c:'var(--run)',tip:`S${weekNum(k)} · ${nf(wk[k],1)} km`}]})),h:210});
-  const dts=vo.map(x=>Date.parse(x.date+'T12:00:00Z'));
   const vch=lineChart({series:[{name:'VO₂máx',color:'var(--run)',area:true,pts:vo.map(x=>({x:Date.parse(x.date+'T12:00:00Z'),y:x.vo2_max,tip:dShort(x.date)+' · VO₂máx '+x.vo2_max}))}],yMin:51,yMax:54.5,refs:[{y:53.5,l:'previsión 31/12: 53–54',c:'#a78bfa'}],xt:vo.filter((_,i)=>i%Math.max(1,Math.ceil(vo.length/6))===0).map(x=>({x:Date.parse(x.date+'T12:00:00Z'),l:dShort(x.date)})),h:210,fy:v=>nf(v,1)});
   const stt=D.status||{};const mn=stt.optimal_chronic_load_min,mx=stt.optimal_chronic_load_max,ac=stt.acute_load,ch=stt.chronic_load;
   const sc=Math.max(mx||700,ac||0,ch||0)*1.1;const pc=v=>Math.min(100,v/sc*100);
@@ -602,7 +601,7 @@ T.semana=function(){
   const td=today(),cw=weekStart(td);
   if(!UI.wk||UI.wk>cw)UI.wk=cw;if(UI.wk<W1)UI.wk=W1;
   const ws=UI.wk,we=addDays(ws,6),wn=weekNum(ws),ag=weekAgg(ws),pv=ws>W1?weekAgg(addDays(ws,-7)):null;DREF='S'+(wn-1);
-  const hdr=`<div class="wnav"><button class="btn sq" data-act="wk-prev" ${ws<=W1?'disabled':''} aria-label="Semana anterior">‹</button><div class="wt"><b>S${wn}${PHASE[wn]?' · '+PHASE[wn]:''}</b><span>${dShort(ws)} – ${dShort(we)}${ws===cw?' · esta semana':''}</span></div><button class="btn sq" data-act="wk-next" ${ws>=cw?'disabled':''} aria-label="Semana siguiente">›</button></div><div class="toolbar"><button class="btn sm" data-act="wk-now" ${ws===cw?'disabled':''}>Ir a hoy</button><button class="btn sm" data-act="exp">Expandir todo</button><button class="btn sm" data-act="col">Contraer todo</button><button class="btn sm" data-act="share">Compartir</button></div>`;
+  const hdr=`<div class="wnav"><button class="btn sq" data-act="wk-prev" ${ws<=W1?'disabled':''} aria-label="Semana anterior">‹</button><div class="wt"><b>S${wn}${PHASE[wn]?' · '+PHASE[wn]:''}</b><span>${dShort(ws)} – ${dShort(we)}${ws===cw?' · esta semana':''}</span></div><button class="btn sq" data-act="wk-next" ${ws>=cw?'disabled':''} aria-label="Semana siguiente">›</button></div><div class="toolbar"><button class="btn sm" data-act="wk-now" ${ws===cw?'disabled':''}>Ir a hoy</button><button class="btn sm" data-act="tog">%%TOG%%</button><button class="btn sm" data-act="share">Compartir</button></div>`;
   T._share=`Semana S${wn} (${dShort(ws)} – ${dShort(we)})\nCarrera: ${nf(ag.km,1)} km en ${ag.r.length} salidas\nFuerza: ${ag.g.length}/4 sesiones · ${nf(ag.vol/1000,1)} t\nSueño medio: ${ag.sleep!=null?nf(ag.sleep,1):'–'} h · VFC ${nf(ag.hrv,0)} ms · FC reposo ${nf(ag.rhr,0)}\nPeso medio: ${nf(ag.wt,1)} kg`;
   const dd=(c,p,dec,u,g)=>pv?dlt(c,p,dec,u,g):['',''];
   const all=ALL().filter(a=>inWeek(a.day,ws));
@@ -629,7 +628,7 @@ T.semana=function(){
     if(!pl[1]&&g.length)ic+='<i class="g">Fuerza ✓</i>';
     if(!pl[2]&&rn.length)ic+='<i class="r">Carrera ✓</i>';
     const n=nightBy[d],h=hvBy[d],w=wtBy[d];
-    const chips=[n?`<span class="mc">Sueño <b>${nf(n.sleep_hours,1)} h</b>${n.sleep_score?' · '+n.sleep_score:''}</span>`:'',h?`<span class="mc">VFC <b>${h.last_night_avg_hrv_ms}</b></span>`:'',n?.resting_heart_rate_bpm?`<span class="mc">FC reposo <b>${n.resting_heart_rate_bpm}</b></span>`:'',w?`<span class="mc">Peso <b>${nf(w.weight_kg,1)}</b></span>`:''].join('');
+    const chips=[n?`<span class="mc">Sueño <b>${nf(n.sleep_hours,1)} h</b>${n.sleep_score?' · '+n.sleep_score:''}</span>`:'',h?`<span class="mc">VFC <b>${h.last_night_avg_hrv_ms}</b></span>`:'',n?.resting_heart_rate_bpm?`<span class="mc">FC reposo <b>${n.resting_heart_rate_bpm}</b></span>`:''].join('');
     const acts=items.map(it=>`<details class="act" data-id="${it.id}" ${UI.open.has(it.id)?'open':''}><summary><span class="ad ${it.k}"></span><div class="am"><div class="at">${esc(it.title)}</div><div class="as">${esc(it.sub)}</div></div>${it.z?`<span class="zone" style="background:${it.z[1]}">${it.z[0]}</span>`:''}<span class="chev"></span></summary><div class="ab">${it.body()}</div></details>`).join('');
     const none=!items.length?`<div class="dnone">${pl[1]||pl[2]?(past?'Sin registrar':isT?'Pendiente de hoy':'Planificado'):'Descanso'}</div>`:'';
     return `<div class="dcard ${isT?'today':''}"><div class="dh"><div><div class="dn">${dWd(d)} ${d.slice(8)} ${dShort(d).split(' ').slice(1).join(' ')}</div><div class="dp">${pl[0]}</div></div><div class="ic">${ic}</div></div>${chips?`<div class="dm">${chips}</div>`:''}${acts}${none}</div>`;
@@ -646,7 +645,8 @@ T.semana=function(){
    ${kpi('Peso (media)',nf(ag.wt,1),'kg',dw[0],dw[1]||'neu')}
    ${kpi('Plan cumplido',done+'/'+total,'sesiones',Math.round(done/total*100)+'% del plan semanal',done===total?'up':'neu')}
   </div>`;
-  return hdr+tiles+`<div id="wkdays">${cards}</div>`;
+  const nAct=days.reduce((a,x)=>a+x.items.length,0),nOpen=days.reduce((a,x)=>a+x.items.filter(i=>UI.open.has(i.id)).length,0);
+  return hdr.replace('%%TOG%%',nAct&&nOpen===nAct?'Contraer todo':'Desplegar todo')+tiles+`<div id="wkdays">${cards}</div>`;
 };
 
 /* ───────────── objetivos (editables; se guardan en este móvil) ───────────── */
@@ -735,7 +735,7 @@ async function act(a,el){
   if(a==='wk-prev'&&UI.wk>W1)UI.wk=addDays(UI.wk,-7);
   else if(a==='wk-next'&&UI.wk<weekStart(today()))UI.wk=addDays(UI.wk,7);
   else if(a==='wk-now')UI.wk=weekStart(today());
-  else if(a==='exp'||a==='col'){document.querySelectorAll('#t-semana details.act').forEach(d=>{d.open=a==='exp'});vib();return}
+  else if(a==='tog'){const ds=[...document.querySelectorAll('#t-semana details.act')],op=ds.some(d=>!d.open);ds.forEach(d=>{d.open=op});if(el)el.textContent=op?'Contraer todo':'Desplegar todo';vib();return}
   else return;
   vib();mark(['semana']);
 }
