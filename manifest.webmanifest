@@ -1,6 +1,6 @@
 {
- "name": "Cambio físico",
- "short_name": "Cambio",
+ "name": "Forma",
+ "short_name": "Forma",
  "description": "Panel de fuerza (Hevy) y carrera/recuperación (Garmin)",
  "start_url": "./",
  "scope": "./",

@@ -1,4 +1,4 @@
-# Cambio físico · app para tu Pixel 10a
+# Forma · app para tu Pixel 10a
 
 Panel con tus datos de Hevy (fuerza) y Garmin (carrera, sueño, VFC, peso). Se instala como app (icono: mancuerna blanca sobre negro), abre sin cobertura y se actualiza sola cada 30 min. Tus datos van **cifrados**: la web es pública, pero solo tú los lees con tu clave.
 
