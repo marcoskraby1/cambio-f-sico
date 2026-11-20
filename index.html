@@ -715,9 +715,12 @@ function status(){
 let loading=false,lastFetch=0,lastSig='';
 async function load(manual){
   if(loading)return;const pass=LS.get('cf_pass');if(!pass){showLock();return}
-  if(!manual&&meta.ok&&Date.now()-lastFetch<60e3)return;
+  if(!manual&&meta.ok&&lastFetch&&Date.now()-lastFetch<60e3)return;
   loading=true;const b=document.getElementById('refresh');if(manual)b.classList.add('spin');
   try{
+    if(!meta.ok&&!manual&&!lastSig){ /* arranque: pinta al instante la última copia guardada y luego actualiza */
+      try{const rc=await fetch(DATA_URL+'?cached=1');if(rc.ok){const ec=await rc.json();const jc=await decrypt(ec,pass);lastSig=ec.iv+ec.salt+ec.ct.length;document.getElementById('lock').style.display='none';applyData(jc);lastFetch=0}}catch(e){}
+    }
     const r=await fetch(DATA_URL,{cache:'no-cache'});
     if(!r.ok)throw new Error('http '+r.status);
     const env=await r.json();lastFetch=Date.now();

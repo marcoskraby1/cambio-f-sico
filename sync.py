@@ -184,7 +184,7 @@ def g_sleep(g):
 
 def g_hrv(g):
     trend = []
-    for d in days_back(21):
+    for d in days_back(15):
         try:
             s = (g.get_hrv_data(d) or {}).get("hrvSummary") or {}
         except Exception:
@@ -262,7 +262,10 @@ def g_rundet(g, acts):
 
 def g_vo2(g):
     trend, last = [], None
-    for d in days_back(42):
+    ds = days_back(42)
+    for k, d in enumerate(ds):
+        if k % 2 and k != len(ds) - 1:  # el VO2máx cambia poco: un día sí y otro no, y siempre el último
+            continue
         try:
             m = g.get_max_metrics(d) or []
         except Exception:
