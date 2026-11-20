@@ -33,13 +33,21 @@ a,button,summary,select,nav a,label{touch-action:manipulation}
 svg text{font-family:var(--font)}
 .wrap{max-width:1100px;margin:0 auto;padding:0 16px calc(56px + env(safe-area-inset-bottom))}
 .top{position:sticky;top:0;z-index:40;background:transparent;padding:calc(10px + env(safe-area-inset-top)) 0 8px;margin:0 -16px 16px;padding-left:16px;padding-right:16px}
-.top::before{content:"";position:absolute;left:0;right:0;top:0;bottom:0;z-index:-1;pointer-events:none;background:rgba(9,10,12,.88);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 70%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 70%,transparent 100%)}
-.top::after{content:"";position:absolute;left:0;right:0;top:100%;height:14px;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(9,10,12,.55),rgba(9,10,12,0))}
+.tfx{position:absolute;left:0;right:0;top:0;bottom:-28px;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(9,10,12,.8) 0,rgba(9,10,12,.5) 50%,rgba(9,10,12,0) 100%)}
+.tfx::before,.tfx::after{content:"";position:absolute;left:0;right:0;top:0;bottom:0}
+.tfx::before{-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 30%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 30%,transparent 100%)}
+.tfx::after{-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);-webkit-mask-image:linear-gradient(to bottom,#000 0,transparent 62%);mask-image:linear-gradient(to bottom,#000 0,transparent 62%)}
 #statusline{font-size:12px;color:var(--mut)}#statusline:empty{display:none}#statusline{margin-top:6px}
 header{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:8px}
 .brand{display:flex;align-items:center;gap:12px}
-.logo{width:40px;height:40px;border-radius:50%;overflow:hidden;flex:none}
-.logo svg{display:block;width:100%;height:100%}
+.pmenu{position:relative;flex:none}
+.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid rgba(255,255,255,.16);color:var(--text);font:650 17px var(--font);padding:0;cursor:pointer}
+.avatar[aria-expanded=true]{border-color:var(--run)}
+.pop{position:absolute;left:0;top:calc(100% + 8px);z-index:60;min-width:230px;padding:6px;border-radius:18px;background:rgba(22,27,34,.98);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 40px rgba(0,0,0,.55)}
+.pop[hidden]{display:none}
+.pop .ph{padding:8px 12px 10px;border-bottom:1px solid var(--line);margin-bottom:4px}.pop .ph b{display:block;font-size:15px}.pop .ph span{font-size:12px;color:var(--mut)}
+.pop .pi{display:block;width:100%;text-align:left;background:none;border:0;color:var(--text);font:500 14.5px var(--font);padding:11px 12px;border-radius:12px;cursor:pointer}
+.pop .pi:active{background:rgba(255,255,255,.07)}
 h1{font-size:20px;font-weight:650;letter-spacing:-.01em}
 .sub{color:var(--mut);font-size:12.5px}
 .live{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -139,8 +147,6 @@ select{background:var(--card2);color:var(--text);border:1px solid var(--line);bo
 footer{margin-top:28px;color:var(--dim);font-size:12px;text-align:center}
 .empty{color:var(--dim);font-size:13px;padding:18px 0;text-align:center}
 
-.logo{width:40px;height:40px;flex:none}
-.logo svg{display:block;width:100%;height:100%}
 button.btn:disabled{opacity:.35;pointer-events:none}
 button.btn.sq{width:42px;height:42px;padding:0;font-size:24px;line-height:1;display:grid;place-items:center}
 button.btn.sm{padding:7px 12px;font-size:12.5px}
@@ -209,7 +215,7 @@ details[open]>summary .chev{transform:rotate(-135deg);margin-bottom:-3px}
 .shs{color:var(--mut);font-size:12.5px}
 html.nosc{overflow:hidden}
 @media(max-width:720px){
-  .live{flex-wrap:nowrap;gap:6px}.brand{min-width:0}h1{white-space:nowrap}header{margin-bottom:0}.brand .logo{width:34px;height:34px}.brand h1{font-size:17px}#subtitle{display:none}.pill{padding:5px 9px;font-size:11.5px}button.btn#refresh{padding:0;width:38px;height:34px;display:grid;place-items:center}button.btn#refresh svg{margin:0!important}.bt{display:none}
+  .live{flex-wrap:nowrap;gap:6px}.brand{min-width:0}h1{white-space:nowrap}header{margin-bottom:0}.avatar{width:34px;height:34px;font-size:15px}.brand h1{font-size:17px}#subtitle{display:none}.pill{padding:5px 9px;font-size:11.5px}button.btn#refresh{padding:0;width:38px;height:34px;display:grid;place-items:center}button.btn#refresh svg{margin:0!important}.bt{display:none}
   nav{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));top:auto;border-radius:30px;border:1px solid rgba(255,255,255,.12);margin:0;padding:6px;background:rgba(22,27,34,.96);box-shadow:0 10px 30px rgba(0,0,0,.55);z-index:30;gap:2px}
   nav a{flex-direction:column;gap:3px;padding:8px 2px;font-size:10.5px;border-radius:24px;transition:padding .28s cubic-bezier(.4,0,.2,1),gap .28s cubic-bezier(.4,0,.2,1),background .15s}
   nav{transition:left .28s cubic-bezier(.4,0,.2,1),right .28s cubic-bezier(.4,0,.2,1)}
@@ -241,9 +247,17 @@ html.nosc{overflow:hidden}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="0 0 100 100"><rect x="1" y="1" width="98" height="98" rx="25" fill="#111113" stroke="rgba(255,255,255,.16)" stroke-width="2"/><g fill="#fff"><rect x="11" y="37" width="9.5" height="26" rx="4.75"/><rect x="79.5" y="37" width="9.5" height="26" rx="4.75"/><rect x="24" y="24" width="11.5" height="52" rx="5.75"/><rect x="64.5" y="24" width="11.5" height="52" rx="5.75"/><rect x="33" y="43.75" width="34" height="12.5"/><path d="M35.5 39.75V44H39.5V43.75A4 4 0 0 1 35.5 39.75Z"/><path d="M64.5 39.75V44H60.5V43.75A4 4 0 0 0 64.5 39.75Z"/><path d="M35.5 60.25V56H39.5V56.25A4 4 0 0 0 35.5 60.25Z"/><path d="M64.5 60.25V56H60.5V56.25A4 4 0 0 1 64.5 60.25Z"/></g></symbol><symbol id="logoc" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#111113" stroke="rgba(255,255,255,.16)" stroke-width="2"/><g fill="#fff"><rect x="11" y="37" width="9.5" height="26" rx="4.75"/><rect x="79.5" y="37" width="9.5" height="26" rx="4.75"/><rect x="24" y="24" width="11.5" height="52" rx="5.75"/><rect x="64.5" y="24" width="11.5" height="52" rx="5.75"/><rect x="33" y="43.75" width="34" height="12.5"/><path d="M35.5 39.75V44H39.5V43.75A4 4 0 0 1 35.5 39.75Z"/><path d="M64.5 39.75V44H60.5V43.75A4 4 0 0 0 64.5 39.75Z"/><path d="M35.5 60.25V56H39.5V56.25A4 4 0 0 0 35.5 60.25Z"/><path d="M64.5 60.25V56H60.5V56.25A4 4 0 0 1 64.5 60.25Z"/></g></symbol></svg>
 <div class="wrap">
   <div class="top" id="top">
+  <div class="tfx" aria-hidden="true"></div>
   <header>
     <div class="brand">
-      <div class="logo"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#logoc"/></svg></div>
+      <div class="pmenu"><button class="avatar" id="pbtn" aria-label="Perfil" aria-haspopup="menu" aria-expanded="false">M</button>
+        <div class="pop" id="pop" role="menu" hidden>
+          <div class="ph"><b>Marcos</b><span>Hevy + Garmin Connect</span></div>
+          <button class="pi" role="menuitem" data-go="cuerpo">Mis objetivos</button>
+          <button class="pi" role="menuitem" id="pref">Actualizar ahora</button>
+          <button class="pi" role="menuitem" id="ghtok">Clave de GitHub</button>
+          <button class="pi" role="menuitem" id="chpass">Cambiar clave de datos</button>
+        </div></div>
       <div><h1>Cambio físico</h1><div class="sub" id="subtitle">Hevy + Garmin Connect</div></div>
     </div>
     <div class="live">
@@ -262,7 +276,7 @@ html.nosc{overflow:hidden}
   <section class="tab" id="t-carrera"></section>
   <section class="tab" id="t-recuperacion"></section>
   <section class="tab" id="t-cuerpo"></section>
-  <footer>Datos de Hevy y Garmin Connect, sincronizados y cifrados. <a href="#" id="chpass" style="color:var(--mut)">Cambiar clave</a> · <a href="#" id="ghtok" style="color:var(--mut)">Clave de GitHub</a></footer>
+  <footer>Datos de Hevy y Garmin Connect, sincronizados y cifrados.</footer>
 </div>
 <div class="sheet" id="sheet" hidden><div class="sb" data-act="close"></div><div class="sp"><div class="grab" id="grab"></div><div id="shc"></div></div></div>
 <div id="lock" style="display:none;position:fixed;inset:0;z-index:100;background:var(--bg);place-items:center;padding:24px">
@@ -360,7 +374,8 @@ const W=memo(()=>[...hev.list.values()].map(w=>({...w,ms:Date.parse(w.start),day
 const NIGHTS=memo(()=>(D.sleep?.nights||[]).slice().sort((a,b)=>a.date<b.date?-1:1));
 const WEIGHTS=memo(()=>(D.weight?.measurements||[]).slice().sort((a,b)=>a.date<b.date?-1:1));
 const bedMin=ms=>{const [h,m]=hm(ms).split(':').map(Number);let v=h*60+m;if(v<18*60)v+=1440;return v};
-const lateBed=ms=>bedMin(ms)>23*60+30;
+const sleepGoal=()=>{const g=GOALS.find(x=>x.t==='sueno')||{},h=g.h>0?g.h:7.3,bed=/^\d{1,2}:\d{2}$/.test(g.bed||'')?g.bed:'23:30',[a,b]=bed.split(':').map(Number);let bm=a*60+b;if(bm<18*60)bm+=1440;return {h,bed,bm}};
+const lateBed=ms=>bedMin(ms)>sleepGoal().bm;
 const bedLabel=ms=>hm(ms);
 function movAvg(ws){return ws.map((w,i)=>{const lo=addDays(w.date,-6);const sl=ws.filter(x=>x.date>=lo&&x.date<=w.date);return {date:w.date,v:avg(sl.map(x=>x.weight_kg))}})}
 const _exc={v:-1,m:new Map()};
@@ -442,7 +457,7 @@ T.resumen=function(){
   if(hw!=null)chips.push(hw>=78?['good',`VFC semanal <b>${hw} ms</b> ≥ 78 → techo Z2 <b>155 ppm</b> (desde S5)`]:['warn',`VFC semanal <b>${hw} ms</b> &lt; 78 → mantén techo Z2 <b>152 ppm</b>`]);
   if(last)chips.push(last.sleep_hours<6.5?['warn',`Dormiste <b>${nf(last.sleep_hours)} h</b> (&lt;6,5): recorta intensidad`]:['good',`Sueño <b>${nf(last.sleep_hours)} h</b> · OK para entrenar`]);
   const bef=ns.slice(-7).filter(n=>!lateBed(n.sleep_start)).length;
-  if(ns.length)chips.push(bef>=5?['good',`<b>${bef}/7</b> noches dormido antes de 23:30`]:['warn',`Solo <b>${bef}/7</b> noches dormido antes de 23:30 (objetivo ≥5)`]);
+  if(ns.length)chips.push(bef>=5?['good',`<b>${bef}/7</b> noches dormido antes de ${sleepGoal().bed}`]:['warn',`Solo <b>${bef}/7</b> noches dormido antes de ${sleepGoal().bed} (objetivo ≥5)`]);
   const rhrs=ns.slice(-3).map(n=>n.resting_heart_rate_bpm).filter(Boolean);
   if(rhrs.length&&rhrs.every(v=>v>=51))chips.push(['bad',`FC reposo ≥51 tres días seguidos: recorta intensidad`]);
   if(D.status?.acwr_status)chips.push([D.status.acwr_status==='OPTIMAL'?'good':'warn',`Carga aguda/crónica <b>${nf(D.status.load_ratio,2)}</b> · ${esc(String(D.status.acwr_status).toLowerCase())}`]);
@@ -501,8 +516,8 @@ T.recuperacion=function(){
   const items=ns.map(n=>{const h=x=>(x||0)/3600;const late=lateBed(n.sleep_start);return {label:dWd(n.date)+' '+n.date.slice(8),sub:bedLabel(n.sleep_start),subC:late?'#fb923c':'#34d399',top:nf(n.sleep_hours,1),
     segs:[{v:h(n.deep_sleep_seconds),c:'var(--deep)',tip:`${dShort(n.date)} · profundo ${nf(h(n.deep_sleep_seconds))} h`},{v:h(n.light_sleep_seconds),c:'var(--light)',tip:`${dShort(n.date)} · ligero ${nf(h(n.light_sleep_seconds))} h`},{v:h(n.rem_sleep_seconds),c:'var(--rem)',tip:`${dShort(n.date)} · REM ${nf(h(n.rem_sleep_seconds))} h\nPuntuación ${n.sleep_score} · te dormiste ${bedLabel(n.sleep_start)}`},{v:h(n.awake_seconds),c:'var(--awake)',tip:'Despierto '+nf(h(n.awake_seconds),2)+' h'}]}});
   const l7=ns.slice(-7),bef=l7.filter(n=>!lateBed(n.sleep_start)).length,ah=avg(l7.map(n=>n.sleep_hours)),as=avg(l7.map(n=>n.sleep_score));
-  const kp=`<div class="grid g4" style="margin-bottom:14px">${kpi('Sueño medio · 7 noches',nf(ah,1),'h','',ah>=7.3?'up':'wa')}${kpi('Puntuación media',nf(as,0),'','','neu')}${kpi('Antes de 23:30',bef,'/7','',bef>=5?'up':'wa')}${kpi('Body Battery',nf(st.body_battery_current,0),'','','neu')}</div>`;
-  const sl=card('Sueño por noche',barChart({items,h:260,refs:[{y:7.3,l:'objetivo 7,3 h'}]})+`<div class="leg"><span style="--c:var(--deep)">Profundo</span><span style="--c:var(--light)">Ligero</span><span style="--c:var(--rem)">REM</span><span style="--c:var(--awake)">Despierto</span></div><div class="note">Línea punteada = objetivo 7,3 h. Debajo de cada barra: hora a la que te dormiste (naranja = pasada la 23:30).</div>`);
+  const kp=`<div class="grid g4" style="margin-bottom:14px">${kpi('Sueño medio · 7 noches',nf(ah,1),'h','',ah>=sleepGoal().h?'up':'wa')}${kpi('Puntuación media',nf(as,0),'','','neu')}${kpi('Antes de '+sleepGoal().bed,bef,'/7','',bef>=5?'up':'wa')}${kpi('Body Battery',nf(st.body_battery_current,0),'','','neu')}</div>`;
+  const sl=card('Sueño por noche',barChart({items,h:260,refs:[{y:sleepGoal().h,l:'objetivo '+nf(sleepGoal().h,1)+' h'}]})+`<div class="leg"><span style="--c:var(--deep)">Profundo</span><span style="--c:var(--light)">Ligero</span><span style="--c:var(--rem)">REM</span><span style="--c:var(--awake)">Despierto</span></div><div class="note">Línea punteada = tu objetivo de horas. Debajo de cada barra: hora a la que te dormiste (naranja = pasada la ${sleepGoal().bed}).</div>`);
   const hv=(D.hrv?.trend||[]).slice().sort((a,b)=>a.date<b.date?-1:1).slice(-UI.rS);const X=d=>Date.parse(d+'T12:00:00Z');
   const xt=hv.filter((_,i)=>i%Math.max(1,Math.ceil(hv.length/6))===0).map(x=>({x:X(x.date),l:dShort(x.date)}));
   const hch=lineChart({series:[{name:'VFC noche',color:'var(--hrv)',pts:hv.map(x=>({x:X(x.date),y:x.last_night_avg_hrv_ms,tip:dShort(x.date)+' · VFC '+x.last_night_avg_hrv_ms+' ms'}))},{name:'Media semanal',color:'#e9edf5',dash:true,dots:false,w:1.8,pts:hv.map(x=>({x:X(x.date),y:x.weekly_avg_hrv_ms,tip:dShort(x.date)+' · media 7 d '+x.weekly_avg_hrv_ms+' ms'}))}],refs:[{y:78,l:'umbral 78',c:'#fbbf24'}],xt,h:220,fy:v=>nf(v,0)});
@@ -639,7 +654,7 @@ T.semana=function(){
   const tiles=`<div class="grid g3 wkt">
    ${kpi('Carrera',nf(ag.km,1),'km',dk[0]||'',dk[1]||'neu')}
    ${kpi('Fuerza',ag.g.length,'/4','',ag.g.length>=4?'up':'neu')}
-   ${kpi('Sueño medio',ag.sleep!=null?nf(ag.sleep,1):'–','h',ds[0]||'',ds[1]||(ag.sleep>=7.3?'up':'wa'))}
+   ${kpi('Sueño medio',ag.sleep!=null?nf(ag.sleep,1):'–','h',ds[0]||'',ds[1]||(ag.sleep>=sleepGoal().h?'up':'wa'))}
    ${kpi('VFC media',nf(ag.hrv,0),'ms',dh[0],dh[1]||'neu')}
    ${kpi('FC en reposo',nf(ag.rhr,0),'ppm',dr[0],dr[1]||'neu')}
    ${kpi('Peso (media)',nf(ag.wt,1),'kg',dw[0],dw[1]||'neu')}
@@ -654,7 +669,7 @@ const DEF_GOALS=[{id:'g1',t:'peso',kg:73.5,date:'2026-12-31'},{id:'g2',t:'fuerza
 let GOALS=(()=>{try{const j=JSON.parse(localStorage.getItem(GK)||'null');if(Array.isArray(j))return j}catch(e){}return DEF_GOALS.map(g=>({...g}))})();
 const saveGoals=()=>{try{localStorage.setItem(GK,JSON.stringify(GOALS))}catch(e){}};
 /* objetivo de sueño: se añade una sola vez; si lo borras no vuelve */
-try{if(!GOALS.some(g=>g.t==='sueno')&&!localStorage.getItem('cf_sg')){GOALS.push({id:'g5',t:'sueno',h:7.3});saveGoals();localStorage.setItem('cf_sg','1')}}catch(e){}
+try{if(!GOALS.some(g=>g.t==='sueno')&&!localStorage.getItem('cf_sg')){GOALS.push({id:'g5',t:'sueno',h:7.3,bed:'23:30'});saveGoals();localStorage.setItem('cf_sg','1')}}catch(e){}
 const num=v=>parseFloat(String(v).trim().replace(',','.'));
 function parseTime(v){const p=String(v).trim().replace(',','.').split(':').map(Number);if(!p.length||p.some(x=>isNaN(x)||x<0))return null;let t=0;if(p.length===1)t=p[0]*60;else if(p.length===2)t=p[0]*60+p[1];else if(p.length===3)t=p[0]*3600+p[1]*60+p[2];else return null;return t>0?Math.round(t):null}
 const fmtT=sec=>{sec=Math.round(sec);return sec>=3600?Math.floor(sec/3600)+':'+String(Math.floor(sec%3600/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0'):mmss(sec)};
@@ -672,10 +687,10 @@ function goalCalc(g){
     return {title,pct,right:nf(cur,1)+' kg',note:rem<=0?'¡Objetivo conseguido!':`Faltan ${nf(rem,1)} kg`+(days>0?` · ritmo necesario ≈ ${nf(rem/days*7,2)} kg/semana`:days!=null?' · fecha pasada':'')+` · media 7 d`};
   }
   if(g.t==='sueno'){
-    const title='Dormir '+nf(g.h,1)+' h por noche',ns=NIGHTS().slice(-7);
+    const sg=sleepGoal(),title='Dormir '+nf(sg.h,1)+' h · acostarte a las '+sg.bed,ns=NIGHTS().slice(-7);
     if(!ns.length)return {title,pct:0,right:'–',note:'Sin datos de sueño todavía'};
-    const avg=ns.reduce((a,n)=>a+n.sleep_hours,0)/ns.length;
-    return {title,pct:clamp(avg/g.h*100),right:nf(avg,1)+' h',note:avg>=g.h?'¡Objetivo conseguido!':`Faltan ${nf(g.h-avg,1)} h por noche · media ${ns.length} noches`};
+    const avg=ns.reduce((a,n)=>a+n.sleep_hours,0)/ns.length,bef=ns.filter(n=>!lateBed(n.sleep_start)).length;
+    return {title,pct:clamp(avg/sg.h*100),right:nf(avg,1)+' h',note:(avg>=sg.h?'Horas conseguidas':`Faltan ${nf(sg.h-avg,1)} h por noche`)+` · antes de ${sg.bed}: ${bef} de ${ns.length} noches`};
   }
   if(g.t==='fuerza'){
     const title=`${g.ex} · ${nf(g.kg)} kg × ${g.reps}`,ser=exerciseSeries(g.ex);
@@ -700,7 +715,7 @@ function goalSheet(){
   const names=[...new Set(W().flatMap(w=>(hev.det.get(w.id)?.exercises||[]).map(e=>e.title)))].sort((a,b)=>a.localeCompare(b,'es'));
   let f='';
   if(t==='peso')f=`<label>Peso objetivo (kg)<input name="kg" inputmode="decimal" value="${g.kg??''}" required placeholder="73,5"></label><label>Fecha límite (opcional)<input name="date" type="date" value="${g.date||''}"></label>`;
-  if(t==='sueno')f=`<label>Horas de sueño por noche<input name="h" inputmode="decimal" value="${g.h??''}" required placeholder="7,3"></label>`;
+  if(t==='sueno')f=`<label>Horas de sueño por noche<input name="h" inputmode="decimal" value="${g.h??''}" required placeholder="7,3"></label><label>Hora a la que quieres acostarte<input name="bed" type="time" value="${g.bed||'23:30'}" required></label>`;
   if(t==='fuerza')f=`<label>Ejercicio (escribe y elige)<input name="ex" list="exl" value="${esc(g.ex||'')}" required autocomplete="off" placeholder="Press de Banca (Barra)"></label><datalist id="exl">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist><div class="frow"><label>Peso (kg)<input name="kg" inputmode="decimal" value="${g.kg??''}" required></label><label>Repeticiones<input name="reps" inputmode="numeric" value="${g.reps??''}" required></label></div>`;
   if(t==='carrera')f=`<div class="sub2">Distancias habituales</div><div class="pres">${[1,3.5,5,10,21.1,42.2].map(k=>`<button type="button" data-km="${k}">${nf(k,1)} km</button>`).join('')}</div><label>Distancia (km)<input name="km" id="kmin" inputmode="decimal" value="${g.km??''}" required placeholder="5"></label><label>Tiempo objetivo (mm:ss o h:mm:ss)<input name="time" inputmode="numeric" value="${g.sec?fmtT(g.sec):''}" required placeholder="20:00"></label>`;
   const tabs=isNew?`<div style="margin:10px 0 2px"><div class="seg">${['peso','sueno','fuerza','carrera'].map(k=>`<button type="button" class="${k===t?'on':''}" data-gtype="${k}">${GT[k]}</button>`).join('')}</div></div>`:'';
@@ -715,11 +730,11 @@ document.addEventListener('submit',e=>{
   const f=new FormData(e.target),{g,isNew}=UI.gf,err=m=>{document.getElementById('gerr').textContent=m};
   let n={id:g.id,t:g.t};
   if(g.t==='peso'){const kg=num(f.get('kg'));if(!(kg>30&&kg<250))return err('Escribe un peso válido en kg.');n.kg=kg;n.date=f.get('date')||''}
-  if(g.t==='sueno'){const h=num(f.get('h'));if(!(h>=4&&h<=12))return err('Escribe horas entre 4 y 12.');n.h=h}
+  if(g.t==='sueno'){const h=num(f.get('h'));if(!(h>=4&&h<=12))return err('Escribe horas entre 4 y 12.');const bed=String(f.get('bed')||'');if(!/^\d{2}:\d{2}$/.test(bed))return err('Elige una hora válida.');n.h=h;n.bed=bed}
   if(g.t==='fuerza'){const kg=num(f.get('kg')),reps=parseInt(f.get('reps'),10),ex=String(f.get('ex')).trim();if(!ex)return err('Elige un ejercicio.');if(!(kg>0&&kg<600))return err('Peso no válido.');if(!(reps>=1&&reps<=30))return err('Repeticiones: de 1 a 30.');Object.assign(n,{ex,kg,reps})}
   if(g.t==='carrera'){const km=num(f.get('km')),sec=parseTime(f.get('time'));if(!(km>0&&km<=250))return err('Distancia no válida.');if(!sec)return err('Tiempo no válido. Ejemplo: 20:00 o 1:45:00.');Object.assign(n,{km,sec})}
   if(isNew)GOALS.push(n);else GOALS=GOALS.map(x=>x.id===n.id?n:x);
-  saveGoals();vib(12);closeSheet();mark(['cuerpo','resumen'],true);
+  saveGoals();vib(12);closeSheet();mark(TABS,true);
 });
 
 /* ───────────── pintado ───────────── */
@@ -873,6 +888,15 @@ async function load(manual){
 }
 document.getElementById('lockform').addEventListener('submit',e=>{e.preventDefault();const v=document.getElementById('pass').value;if(!v)return;LS.set('cf_pass',v);document.getElementById('pass').value='';load(true)});
 document.getElementById('refresh').addEventListener('click',()=>load(true));
+/* menú de perfil */
+const pbtn=document.getElementById('pbtn'),pop=document.getElementById('pop');
+const closePop=()=>{pop.hidden=true;pbtn.setAttribute('aria-expanded','false')};
+pbtn.addEventListener('click',e=>{e.stopPropagation();const open=pop.hidden;pop.hidden=!open;pbtn.setAttribute('aria-expanded',String(open));if(open)vib(8)});
+pop.addEventListener('click',e=>{if(e.target.closest('.pi'))closePop()});
+document.addEventListener('click',e=>{if(!pop.hidden&&!e.target.closest('.pmenu'))closePop()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePop()});
+addEventListener('popstate',closePop);
+document.getElementById('pref').addEventListener('click',()=>load(true));
 document.getElementById('ghtok').addEventListener('click',e=>{e.preventDefault();
   const v=prompt('Pega tu clave de GitHub (token con permiso solo de Actions en este repositorio).\nDéjalo vacío para borrarla.',LS.get('cf_gh')?'(ya guardada)':'');
   if(v===null||v==='(ya guardada)')return;
