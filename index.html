@@ -740,7 +740,14 @@ async function act(a,el){
   vib();mark(['semana']);
 }
 document.getElementById('nav').addEventListener('click',e=>{const a=e.target.closest('a');if(a){vib(6);go(a.dataset.t,true)}});
-addEventListener('hashchange',()=>go(location.hash.slice(1)));
+/* botón/gesto «atrás» de Android: primero cierra la hoja, luego vuelve a Resumen y solo entonces sale de la app */
+try{history.replaceState({r:1},'');history.pushState({a:1},'')}catch(e){}
+addEventListener('popstate',()=>{
+  const keep=()=>{try{history.pushState({a:1},'')}catch(e){}};
+  if(!sheet.hidden&&sheet.classList.contains('open')){closeSheet();keep();return}
+  if(cur!=='resumen'){go('resumen',true);keep();return}
+  history.back();
+});
 document.addEventListener('click',e=>{
   let el;
   if((el=e.target.closest('[data-gedit]'))){openGoal(el.dataset.gedit);return}
