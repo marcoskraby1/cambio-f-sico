@@ -531,9 +531,9 @@ T.recuperacion=function(){
 T.cuerpo=function(){
   const ws=WEIGHTS(),ma=movAvg(ws);if(!ws.length)return `<div class="mb">${card('Objetivos',goalsHTML(true))}</div>`+card('Peso','<div class="empty">Sin pesajes</div>');
   const X=d=>Date.parse(d+'T12:00:00Z');
-  const wg=GOALS.find(g=>g.t==='peso');
+  const wg=mainPeso();
   const cut=UI.rW?addDays(ws[ws.length-1].date,-UI.rW+1):'';const wsv=ws.filter(w=>w.date>=cut),mav=ma.filter(m=>m.date>=cut);
-  const ch=lineChart({series:[{name:'Peso',color:'rgba(251,191,36,.55)',dots:true,w:1.5,pts:wsv.map(w=>({x:X(w.date),y:w.weight_kg,tip:dShort(w.date)+' · '+nf(w.weight_kg)+' kg'}))},{name:'Media 7 d',color:'var(--wt)',dots:false,w:3,pts:mav.map(m=>({x:X(m.date),y:m.v,tip:dShort(m.date)+' · media 7 d '+nf(m.v,2)+' kg'}))}],xt:wsv.filter((_,i)=>i%Math.max(1,Math.ceil(wsv.length/6))===0).map(w=>({x:X(w.date),l:dShort(w.date)})),h:250,fy:v=>nf(v,1),refs:wg?[{y:wg.kg,l:'objetivo '+nf(wg.kg),c:'#34d399'}]:[],refFit:true});
+  const ch=lineChart({series:[{name:'Peso',color:'rgba(251,191,36,.55)',dots:true,w:1.5,pts:wsv.map(w=>({x:X(w.date),y:w.weight_kg,tip:dShort(w.date)+' · '+nf(w.weight_kg)+' kg'}))},{name:'Media 7 d',color:'var(--wt)',dots:false,w:3,pts:mav.map(m=>({x:X(m.date),y:m.v,tip:dShort(m.date)+' · media 7 d '+nf(m.v,2)+' kg'}))}],xt:wsv.filter((_,i)=>i%Math.max(1,Math.ceil(wsv.length/6))===0).map(w=>({x:X(w.date),l:dShort(w.date)})),h:250,fy:v=>nf(v,1),refs:pesoGoals().map(g=>({y:g.kg,l:(g===wg?'objetivo ':'hito ')+nf(g.kg),c:g===wg?'#34d399':'#a7f3d0'})),refFit:true});
   const wk={};ws.forEach(w=>{const k=weekStart(w.date);(wk[k]=wk[k]||[]).push(w.weight_kg)});
   const ks=Object.keys(wk).sort();
   const rows=ks.map((k,i)=>{const a=avg(wk[k]),p=i?avg(wk[ks[i-1]]):null,d=p!=null?a-p:null;return `<tr><td>S${weekNum(k)} · ${dShort(k)}</td><td class="n">${nf(a,2)} kg</td><td class="n ${d==null?'':d<=-0.15?'up':d>=0.15?'down':'neu'}">${d==null?'–':(d>0?'+':'')+nf(d,2)}</td><td class="n">${wk[k].length}</td></tr>`}).join('');
@@ -677,10 +677,13 @@ const kmLab=k=>nf(k,2)+' km';
 const estSec=km=>{const p5=D.pred?.predictions?.['5K']?.time_seconds;return p5?p5*Math.pow(km/5,1.06):null};
 const clamp=v=>Math.max(0,Math.min(100,v));
 const e1of=(w,r)=>w*(1+r/30);
+const pesoGoals=()=>GOALS.filter(g=>g.t==='peso');
+const mainPeso=()=>pesoGoals().reduce((m,g)=>!m||(g.date||'9999')>(m.date||'9999')?g:m,null);
+const dtag=g=>g.date?' · '+dShort(g.date):'';
 function goalCalc(g){
   if(g.t==='peso'){
     const ws=WEIGHTS(),ma=movAvg(ws),cur=ma.length?ma[ma.length-1].v:null,start=ws.length?ws[0].weight_kg:null;
-    const title='Peso '+nf(g.kg)+' kg'+(g.date?' · '+dShort(g.date):'');
+    const title=(pesoGoals().length>1&&g!==mainPeso()?'Hito · ':'')+'Peso '+nf(g.kg)+' kg'+dtag(g);
     if(cur==null)return {title,pct:0,right:'–',note:'Sin pesajes todavía'};
     const dir=g.kg<start?-1:1,total=Math.abs(start-g.kg)||1,pct=clamp((cur-start)*dir/total*100),rem=Math.max(0,(g.kg-cur)*dir);
     const days=g.date?diffDays(today(),g.date):null;
@@ -693,19 +696,19 @@ function goalCalc(g){
     return {title,pct:clamp(avg/sg.h*100),right:nf(avg,1)+' h',note:(avg>=sg.h?'Horas conseguidas':`Faltan ${nf(sg.h-avg,1)} h por noche`)+` · antes de ${sg.bed}: ${bef} de ${ns.length} noches`};
   }
   if(g.t==='fuerza'){
-    const title=`${g.ex} · ${nf(g.kg)} kg × ${g.reps}`,ser=exerciseSeries(g.ex);
+    const title=`${g.ex} · ${nf(g.kg)} kg × ${g.reps}`+dtag(g),ser=exerciseSeries(g.ex);
     if(!ser.length)return {title,pct:0,right:'–',note:'Sin datos de este ejercicio en Hevy (revisa el nombre)'};
     const tgt=e1of(g.kg,g.reps),best=ser.reduce((a,x)=>x.e1>a.e1?x:a,ser[0]);
     const hit=ser.some(x=>x.sets.some(t=>t.weight_kg>=g.kg&&t.reps>=g.reps));
     return {title,pct:hit?100:clamp(best.e1/tgt*100),right:nf(best.top.weight_kg)+' × '+best.top.reps,note:hit?'¡Objetivo conseguido!':`Mejor marca ${nf(best.top.weight_kg)} kg × ${best.top.reps} · 1RM est. ${nf(best.e1)} de ${nf(tgt)} kg`};
   }
-  const est=estSec(g.km),title=`${kmLab(g.km)} en ${fmtT(g.sec)}`,pc=mmss(g.sec/g.km)+'/km';
+  const est=estSec(g.km),title=`${kmLab(g.km)} en ${fmtT(g.sec)}`+dtag(g),pc=mmss(g.sec/g.km)+'/km';
   if(!est)return {title,pct:0,right:'–',note:'Objetivo '+pc+' · sin predicción de Garmin todavía'};
   return {title,pct:clamp(g.sec/est*100),right:fmtT(est),note:`Estimado Garmin ${fmtT(est)} · ${est>g.sec?'faltan '+fmtT(est-g.sec):'¡al alcance!'} · ritmo objetivo ${pc}`};
 }
 function goalsHTML(edit){
   const order={peso:0,sueno:1,fuerza:2,carrera:3};
-  const list=GOALS.slice().sort((a,b)=>order[a.t]-order[b.t]);
+  const list=GOALS.slice().sort((a,b)=>order[a.t]-order[b.t]||(a.date||'9999').localeCompare(b.date||'9999'));
   const rows=list.map(g=>{const c=goalCalc(g);return `<div class="goal${edit?' tap gedit':''}" ${edit?`data-gedit="${g.id}"`:''}><div class="gh"><b>${esc(c.title)}</b><span>${esc(c.right)}</span></div><div class="bar"><i style="width:${c.pct.toFixed(1)}%"></i></div><div class="note" style="margin:6px 0 0">${esc(c.note)}</div></div>`}).join('');
   return (rows||'<div class="empty">Sin objetivos todavía</div>')+(edit?'<button class="btn pri" data-gedit="new" style="width:100%;margin-top:12px;padding:12px">+ Añadir objetivo</button>':'');
 }
@@ -716,8 +719,8 @@ function goalSheet(){
   let f='';
   if(t==='peso')f=`<label>Peso objetivo (kg)<input name="kg" inputmode="decimal" value="${g.kg??''}" required placeholder="73,5"></label><label>Fecha límite (opcional)<input name="date" type="date" value="${g.date||''}"></label>`;
   if(t==='sueno')f=`<label>Horas de sueño por noche<input name="h" inputmode="decimal" value="${g.h??''}" required placeholder="7,3"></label><label>Hora a la que quieres acostarte<input name="bed" type="time" value="${g.bed||'23:30'}" required></label>`;
-  if(t==='fuerza')f=`<label>Ejercicio (escribe y elige)<input name="ex" list="exl" value="${esc(g.ex||'')}" required autocomplete="off" placeholder="Press de Banca (Barra)"></label><datalist id="exl">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist><div class="frow"><label>Peso (kg)<input name="kg" inputmode="decimal" value="${g.kg??''}" required></label><label>Repeticiones<input name="reps" inputmode="numeric" value="${g.reps??''}" required></label></div>`;
-  if(t==='carrera')f=`<div class="sub2">Distancias habituales</div><div class="pres">${[1,3.5,5,10,21.1,42.2].map(k=>`<button type="button" data-km="${k}">${nf(k,1)} km</button>`).join('')}</div><label>Distancia (km)<input name="km" id="kmin" inputmode="decimal" value="${g.km??''}" required placeholder="5"></label><label>Tiempo objetivo (mm:ss o h:mm:ss)<input name="time" inputmode="numeric" value="${g.sec?fmtT(g.sec):''}" required placeholder="20:00"></label>`;
+  if(t==='fuerza')f=`<label>Ejercicio (escribe y elige)<input name="ex" list="exl" value="${esc(g.ex||'')}" required autocomplete="off" placeholder="Press de Banca (Barra)"></label><datalist id="exl">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist><div class="frow"><label>Peso (kg)<input name="kg" inputmode="decimal" value="${g.kg??''}" required></label><label>Repeticiones<input name="reps" inputmode="numeric" value="${g.reps??''}" required></label></div><label>Fecha límite (opcional)<input name="date" type="date" value="${g.date||''}"></label>`;
+  if(t==='carrera')f=`<div class="sub2">Distancias habituales</div><div class="pres">${[1,3.5,5,10,21.1,42.2].map(k=>`<button type="button" data-km="${k}">${nf(k,1)} km</button>`).join('')}</div><label>Distancia (km)<input name="km" id="kmin" inputmode="decimal" value="${g.km??''}" required placeholder="5"></label><label>Tiempo objetivo (mm:ss o h:mm:ss)<input name="time" inputmode="numeric" value="${g.sec?fmtT(g.sec):''}" required placeholder="20:00"></label><label>Fecha límite (opcional)<input name="date" type="date" value="${g.date||''}"></label>`;
   const tabs=isNew?`<div style="margin:10px 0 2px"><div class="seg">${['peso','sueno','fuerza','carrera'].map(k=>`<button type="button" class="${k===t?'on':''}" data-gtype="${k}">${GT[k]}</button>`).join('')}</div></div>`:'';
   return `<div class="sht">${isNew?'Nuevo objetivo':'Editar objetivo · '+GT[t]}</div>${tabs}<form id="gform" autocomplete="off">${f}<div id="gerr" class="note wa" style="min-height:18px"></div><div class="frow" style="margin-top:6px"><button class="btn pri" type="submit" style="flex:2;padding:13px">Guardar</button>${isNew?'':'<button class="btn" type="button" data-act="gdel" style="flex:1;padding:13px;color:#fb7185">Borrar</button>'}</div></form>`;
 }
@@ -731,8 +734,8 @@ document.addEventListener('submit',e=>{
   let n={id:g.id,t:g.t};
   if(g.t==='peso'){const kg=num(f.get('kg'));if(!(kg>30&&kg<250))return err('Escribe un peso válido en kg.');n.kg=kg;n.date=f.get('date')||''}
   if(g.t==='sueno'){const h=num(f.get('h'));if(!(h>=4&&h<=12))return err('Escribe horas entre 4 y 12.');const bed=String(f.get('bed')||'');if(!/^\d{2}:\d{2}$/.test(bed))return err('Elige una hora válida.');n.h=h;n.bed=bed}
-  if(g.t==='fuerza'){const kg=num(f.get('kg')),reps=parseInt(f.get('reps'),10),ex=String(f.get('ex')).trim();if(!ex)return err('Elige un ejercicio.');if(!(kg>0&&kg<600))return err('Peso no válido.');if(!(reps>=1&&reps<=30))return err('Repeticiones: de 1 a 30.');Object.assign(n,{ex,kg,reps})}
-  if(g.t==='carrera'){const km=num(f.get('km')),sec=parseTime(f.get('time'));if(!(km>0&&km<=250))return err('Distancia no válida.');if(!sec)return err('Tiempo no válido. Ejemplo: 20:00 o 1:45:00.');Object.assign(n,{km,sec})}
+  if(g.t==='fuerza'){const kg=num(f.get('kg')),reps=parseInt(f.get('reps'),10),ex=String(f.get('ex')).trim();if(!ex)return err('Elige un ejercicio.');if(!(kg>0&&kg<600))return err('Peso no válido.');if(!(reps>=1&&reps<=30))return err('Repeticiones: de 1 a 30.');Object.assign(n,{ex,kg,reps,date:f.get('date')||''})}
+  if(g.t==='carrera'){const km=num(f.get('km')),sec=parseTime(f.get('time'));if(!(km>0&&km<=250))return err('Distancia no válida.');if(!sec)return err('Tiempo no válido. Ejemplo: 20:00 o 1:45:00.');Object.assign(n,{km,sec,date:f.get('date')||''})}
   if(isNew)GOALS.push(n);else GOALS=GOALS.map(x=>x.id===n.id?n:x);
   saveGoals();vib(12);closeSheet();mark(TABS,true);
 });
