@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cambio físico</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0d1014">
+<meta name="theme-color" content="#090a0c">
 <meta name="color-scheme" content="dark">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
-  --bg:#0d1014;--card:#151a21;--card2:#1b212a;--line:rgba(255,255,255,.08);
+  --bg:#090a0c;--card:#151a21;--card2:#1b212a;--line:rgba(255,255,255,.08);
   --text:#eef1f6;--mut:#9aa4b5;--dim:#687286;
   --run:#4fd1c5;--str:#a78bfa;--hrv:#34d399;--rhr:#fb7185;--wt:#fbbf24;--warn:#fb923c;--bad:#ef4444;--good:#22c55e;
   --deep:#4f46e5;--light:#818cf8;--rem:#22d3ee;--awake:#475069;
@@ -31,11 +31,11 @@ a,button,summary,select,nav a,label{touch-action:manipulation}
 :focus{outline:none}:focus-visible{outline:2px solid var(--run);outline-offset:2px}
 svg text{font-family:var(--font)}
 .wrap{max-width:1100px;margin:0 auto;padding:0 16px calc(56px + env(safe-area-inset-bottom))}
-.top{position:sticky;top:0;z-index:25;background:var(--bg);padding:calc(10px + env(safe-area-inset-top)) 0 8px;margin:0 -16px 8px;padding-left:16px;padding-right:16px}
+.top{position:sticky;top:0;z-index:40;background:var(--bg);padding:calc(10px + env(safe-area-inset-top)) 0 8px;margin:0 -16px 8px;padding-left:16px;padding-right:16px}
 #statusline{font-size:12px;color:var(--mut)}#statusline:empty{display:none}#statusline{margin-top:6px}
 header{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:8px}
 .brand{display:flex;align-items:center;gap:12px}
-.logo{width:40px;height:40px;border-radius:11px;overflow:hidden;flex:none}
+.logo{width:40px;height:40px;border-radius:50%;overflow:hidden;flex:none}
 .logo svg{display:block;width:100%;height:100%}
 h1{font-size:20px;font-weight:650;letter-spacing:-.01em}
 .sub{color:var(--mut);font-size:12.5px}
@@ -207,7 +207,13 @@ html.nosc{overflow:hidden}
 @media(max-width:720px){
   .live{flex-wrap:nowrap;gap:6px}.brand{min-width:0}h1{white-space:nowrap}header{margin-bottom:0}.brand .logo{width:34px;height:34px}.brand h1{font-size:17px}#subtitle{display:none}.pill{padding:5px 9px;font-size:11.5px}button.btn#refresh{padding:0;width:38px;height:34px;display:grid;place-items:center}button.btn#refresh svg{margin:0!important}.bt{display:none}
   nav{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));top:auto;border-radius:30px;border:1px solid rgba(255,255,255,.12);margin:0;padding:6px;background:rgba(22,27,34,.96);box-shadow:0 10px 30px rgba(0,0,0,.55);z-index:30;gap:2px}
-  nav a{flex-direction:column;gap:3px;padding:8px 2px;font-size:10.5px;border-radius:24px}
+  nav a{flex-direction:column;gap:3px;padding:8px 2px;font-size:10.5px;border-radius:24px;transition:padding .2s}
+  nav{transition:left .22s,right .22s}
+  nav.mini{left:52px;right:52px}
+  nav.mini a{padding:11px 2px}
+  nav.mini a span{display:none}
+  nav.mini a svg{width:21px;height:21px}
+  body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(96px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 30%,rgba(9,10,12,0));pointer-events:none;z-index:28}
   .wrap{padding-bottom:calc(108px + env(safe-area-inset-bottom))}
 }
 .rr{display:flex;align-items:center;gap:12px;padding:11px 4px;border-top:1px solid rgba(255,255,255,.06)}
@@ -226,12 +232,12 @@ html.nosc{overflow:hidden}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="0 0 100 100"><rect x="1" y="1" width="98" height="98" rx="25" fill="#111113" stroke="rgba(255,255,255,.16)" stroke-width="2"/><g fill="#fff"><rect x="11" y="37" width="9.5" height="26" rx="4.75"/><rect x="79.5" y="37" width="9.5" height="26" rx="4.75"/><rect x="24" y="24" width="11.5" height="52" rx="5.75"/><rect x="64.5" y="24" width="11.5" height="52" rx="5.75"/><rect x="33" y="43.75" width="34" height="12.5"/><path d="M35.5 39.75V44H39.5V43.75A4 4 0 0 1 35.5 39.75Z"/><path d="M64.5 39.75V44H60.5V43.75A4 4 0 0 0 64.5 39.75Z"/><path d="M35.5 60.25V56H39.5V56.25A4 4 0 0 0 35.5 60.25Z"/><path d="M64.5 60.25V56H60.5V56.25A4 4 0 0 1 64.5 60.25Z"/></g></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="0 0 100 100"><rect x="1" y="1" width="98" height="98" rx="25" fill="#111113" stroke="rgba(255,255,255,.16)" stroke-width="2"/><g fill="#fff"><rect x="11" y="37" width="9.5" height="26" rx="4.75"/><rect x="79.5" y="37" width="9.5" height="26" rx="4.75"/><rect x="24" y="24" width="11.5" height="52" rx="5.75"/><rect x="64.5" y="24" width="11.5" height="52" rx="5.75"/><rect x="33" y="43.75" width="34" height="12.5"/><path d="M35.5 39.75V44H39.5V43.75A4 4 0 0 1 35.5 39.75Z"/><path d="M64.5 39.75V44H60.5V43.75A4 4 0 0 0 64.5 39.75Z"/><path d="M35.5 60.25V56H39.5V56.25A4 4 0 0 0 35.5 60.25Z"/><path d="M64.5 60.25V56H60.5V56.25A4 4 0 0 1 64.5 60.25Z"/></g></symbol><symbol id="logoc" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#111113" stroke="rgba(255,255,255,.16)" stroke-width="2"/><g fill="#fff"><rect x="11" y="37" width="9.5" height="26" rx="4.75"/><rect x="79.5" y="37" width="9.5" height="26" rx="4.75"/><rect x="24" y="24" width="11.5" height="52" rx="5.75"/><rect x="64.5" y="24" width="11.5" height="52" rx="5.75"/><rect x="33" y="43.75" width="34" height="12.5"/><path d="M35.5 39.75V44H39.5V43.75A4 4 0 0 1 35.5 39.75Z"/><path d="M64.5 39.75V44H60.5V43.75A4 4 0 0 0 64.5 39.75Z"/><path d="M35.5 60.25V56H39.5V56.25A4 4 0 0 0 35.5 60.25Z"/><path d="M64.5 60.25V56H60.5V56.25A4 4 0 0 1 64.5 60.25Z"/></g></symbol></svg>
 <div class="wrap">
   <div class="top" id="top">
   <header>
     <div class="brand">
-      <div class="logo"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#logo"/></svg></div>
+      <div class="logo"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#logoc"/></svg></div>
       <div><h1>Cambio físico</h1><div class="sub" id="subtitle">Hevy + Garmin Connect</div></div>
     </div>
     <div class="live">
@@ -255,7 +261,7 @@ html.nosc{overflow:hidden}
 <div class="sheet" id="sheet" hidden><div class="sb" data-act="close"></div><div class="sp"><div class="grab" id="grab"></div><div id="shc"></div></div></div>
 <div id="lock" style="display:none;position:fixed;inset:0;z-index:100;background:var(--bg);place-items:center;padding:24px">
   <form id="lockform" class="card" style="max-width:360px;width:100%;text-align:center">
-    <div style="width:64px;height:64px;margin:0 auto 14px"><svg viewBox="0 0 100 100" aria-hidden="true" style="display:block;width:100%;height:100%"><use href="#logo"/></svg></div>
+    <div style="width:64px;height:64px;margin:0 auto 14px"><svg viewBox="0 0 100 100" aria-hidden="true" style="display:block;width:100%;height:100%"><use href="#logoc"/></svg></div>
     <h1 style="margin-bottom:6px">Cambio físico</h1>
     <div class="sub" style="margin-bottom:14px" id="lockmsg">Escribe la clave de tus datos (la misma que pusiste en GitHub como APP_PASSPHRASE). Se guarda solo en este móvil.</div>
     <input id="pass" type="password" autocomplete="current-password" placeholder="Clave" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font:500 16px var(--font);margin-bottom:10px">
@@ -748,6 +754,9 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{if(e.target.id==='exsel'){T._ex=e.target.value;vib(4);mark(['fuerza'],true)}});
 document.addEventListener('toggle',e=>{const d=e.target;if(d.dataset&&d.dataset.id&&d.classList.contains('act')){d.open?UI.open.add(d.dataset.id):UI.open.delete(d.dataset.id)}},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+/* barra inferior: al bajar se reduce a iconos; al subir vuelve a mostrarse completa */
+{const nv=document.getElementById('nav');let ly=0,tk=0;
+addEventListener('scroll',()=>{if(tk)return;tk=requestAnimationFrame(()=>{tk=0;const y=Math.max(0,scrollY),d=y-ly;if(y<50)nv.classList.remove('mini');else if(d>8)nv.classList.add('mini');else if(d<-8)nv.classList.remove('mini');ly=y})},{passive:true})}
 /* gestos: deslizar para cambiar de semana / cerrar la hoja */
 let sx=0,sy=0,st=0;
 document.getElementById('t-semana').addEventListener('touchstart',e=>{if(e.touches.length!==1)return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now()},{passive:true});
