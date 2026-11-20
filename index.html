@@ -391,7 +391,7 @@ function card(t,b,small,cls=''){return `<div class="card ${cls}"><h3>${t}${small
 function kpi(l,v,u,d,dc,go){return `<div class="card kpi${go?' tap':''}"${go?` data-go="${go}"`:''}><div class="v${!d&&dc?' '+dc:''}">${v}${u?`<small>${u}</small>`:''}</div><div class="l">${l}</div>${d?`<div class="d ${dc||'neu'}">${d}</div>`:''}</div>`}
 const T={};
 T.resumen=function(){
-  const td=today(),ws=weekStart(td),wn=weekNum(ws);
+  const td=today(),ws=weekStart(td);
   const rd=(D.readiness||[])[0]||{},st=D.stats||{},ns=NIGHTS(),last=ns[ns.length-1];
   const hv=(D.hrv?.trend||[]).slice().sort((a,b)=>a.date<b.date?-1:1),hl=hv[hv.length-1];
   const p5=D.pred?.predictions?.['5K']?.time_seconds;
@@ -411,7 +411,6 @@ T.resumen=function(){
     <div><div class="n">${dRace>0?dRace:'—'}</div><div class="t">días a la carrera</div></div>
     <div><div class="n">${r35?mmss(r35):'–'}</div><div class="t">3,5K estimado</div></div></div>
     <div class="lnks"><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Test 3,5K','20261208','20261209','Test de 3,5K. Km1-2 a 4:08-4:10, sin salir más rápido.')}">+ Calendario · test</a><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Carrera 3,5K','20261231','20270101','Objetivo 4:00/km (realista 4:05-4:10).')}">+ Calendario · carrera</a></div></div></div>`;
-  const kmWeek=runs.filter(x=>x.day>=ws).reduce((a,x)=>a+x.km,0),gW=gym.filter(x=>x.day>=ws).length;
   const tiles=`<div class="grid g4 mb">
    ${kpi('Pasos hoy',nf(st.total_steps,0),'','','neu')}
    ${kpi('Peso (media 7 días)',nf(wa,1),'kg',dW!=null?(dW>0?'+':'')+nf(dW,1)+' esta semana':'',dW==null?'neu':dW<=-0.15?'up':dW>=0.15?'down':'neu','cuerpo')}
@@ -608,13 +607,12 @@ T.semana=function(){
   T._share=`Semana S${wn} (${dShort(ws)} – ${dShort(we)})\nCarrera: ${nf(ag.km,1)} km en ${ag.r.length} salidas\nFuerza: ${ag.g.length}/4 sesiones · ${nf(ag.vol/1000,1)} t\nSueño medio: ${ag.sleep!=null?nf(ag.sleep,1):'–'} h · VFC ${nf(ag.hrv,0)} ms · FC reposo ${nf(ag.rhr,0)}\nPeso medio: ${nf(ag.wt,1)} kg`;
   const dd=(c,p,dec,u,g)=>pv?dlt(c,p,dec,u,g):['',''];
   const all=ALL().filter(a=>inWeek(a.day,ws));
-  const nightBy=Object.fromEntries(ag.ns.map(n=>[n.date,n])),hvBy=Object.fromEntries(ag.hv.map(h=>[h.date,h])),wtBy=Object.fromEntries(ag.wts.map(w=>[w.date,w]));
+  const nightBy=Object.fromEntries(ag.ns.map(n=>[n.date,n])),hvBy=Object.fromEntries(ag.hv.map(h=>[h.date,h]));
   /* días */
-  let done=0,total=0,latest=null;const days=[];
+  let latest=null;const days=[];
   for(let i=0;i<7;i++){
     const d=addDays(ws,i),pl=PLAN[i],isT=d===td,past=d<td;
     const g=ag.g.filter(x=>x.day===d).sort((a,b)=>a.ms-b.ms),rn=all.filter(x=>x.day===d&&x.isRun),ot=all.filter(x=>x.day===d&&!x.isRun);
-    if(pl[1]){total++;if(g.length)done++}if(pl[2]){total++;if(rn.length)done++}
     const items=[];
     g.forEach(x=>items.push({id:'g:'+x.id,t:hm(x.ms),k:'g',title:niceT(x.title),sub:`${hm(x.ms)} · ${hms(x.dur)} · ${x.sets} series · ${nf((volOf(hev.det.get(x.id))||0)/1000,1)} t`,body:()=>gymDetail(x)}));
     rn.forEach(a=>{const z=zoneOf(a.avg_hr_bpm);items.push({id:'r:'+a.id,t:(a.start_time||'').slice(11,16),k:'r',title:cleanRun(a.name),sub:`${(a.start_time||'').slice(11,16)} · ${nf(a.km,2)} km · ${pace(a.duration_seconds,a.distance_meters)} · ${hms(a.duration_seconds)} · FC ${a.avg_hr_bpm??'–'}`,z,body:()=>runDetail(a)})});
@@ -630,14 +628,14 @@ T.semana=function(){
     if(pl[2])ic+=rn.length?'<i class="r">Carrera ✓</i>':`<i class="${pend}">Carrera</i>`;
     if(!pl[1]&&g.length)ic+='<i class="g">Fuerza ✓</i>';
     if(!pl[2]&&rn.length)ic+='<i class="r">Carrera ✓</i>';
-    const n=nightBy[d],h=hvBy[d],w=wtBy[d];
+    const n=nightBy[d],h=hvBy[d];
     const chips=[n?`<span class="mc">Sueño <b>${nf(n.sleep_hours,1)} h</b>${n.sleep_score?' · '+n.sleep_score:''}</span>`:'',h?`<span class="mc">VFC <b>${h.last_night_avg_hrv_ms}</b></span>`:'',n?.resting_heart_rate_bpm?`<span class="mc">FC reposo <b>${n.resting_heart_rate_bpm}</b></span>`:''].join('');
     const acts=items.map(it=>`<details class="act" data-id="${it.id}" ${UI.open.has(it.id)?'open':''}><summary><span class="ad ${it.k}"></span><div class="am"><div class="at">${esc(it.title)}</div><div class="as">${esc(it.sub)}</div></div>${it.z?`<span class="zone" style="background:${it.z[1]}">${it.z[0]}</span>`:''}<span class="chev"></span></summary><div class="ab">${it.body()}</div></details>`).join('');
     const none=!items.length?`<div class="dnone">${pl[1]||pl[2]?(past?'Sin registrar':isT?'Pendiente de hoy':'Planificado'):'Descanso'}</div>`:'';
     return `<div class="dcard ${isT?'today':''}"><div class="dh"><div><div class="dn">${dWd(d)} ${d.slice(8)} ${dShort(d).split(' ').slice(1).join(' ')}</div><div class="dp">${pl[0]}</div></div><div class="ic">${ic}</div></div>${chips?`<div class="dm">${chips}</div>`:''}${acts}${none}</div>`;
   }).join('');
   /* resumen semanal */
-  const dk=dd(ag.km,pv?.km,1,' km',true),dv=dd(ag.vol/1000,pv?pv.vol/1000:null,1,' t',true),dh=dd(ag.hrv,pv?.hrv,0,' ms',true),dr=dd(ag.rhr,pv?.rhr,0,' ppm',false),dw=dd(ag.wt,pv?.wt,1,' kg',false),ds=dd(ag.sleep,pv?.sleep,1,' h',true);
+  const dk=dd(ag.km,pv?.km,1,' km',true),dh=dd(ag.hrv,pv?.hrv,0,' ms',true),dr=dd(ag.rhr,pv?.rhr,0,' ppm',false),dw=dd(ag.wt,pv?.wt,1,' kg',false),ds=dd(ag.sleep,pv?.sleep,1,' h',true);
   const tiles=`<div class="grid g3 wkt">
    ${kpi('Carrera',nf(ag.km,1),'km',dk[0]||'',dk[1]||'neu')}
    ${kpi('Fuerza',ag.g.length,'/4','',ag.g.length>=4?'up':'neu')}
