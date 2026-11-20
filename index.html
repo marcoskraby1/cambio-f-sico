@@ -30,8 +30,10 @@ input,select{-webkit-user-select:text;user-select:text}
 a,button,summary,select,nav a,label{touch-action:manipulation}
 :focus{outline:none}:focus-visible{outline:2px solid var(--run);outline-offset:2px}
 svg text{font-family:var(--font)}
-.wrap{max-width:1100px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(56px + env(safe-area-inset-bottom))}
-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px calc(56px + env(safe-area-inset-bottom))}
+.top{position:sticky;top:0;z-index:25;background:var(--bg);padding:calc(10px + env(safe-area-inset-top)) 0 8px;margin:0 -16px 8px;padding-left:16px;padding-right:16px}
+#statusline{font-size:12px;color:var(--mut)}#statusline:empty{display:none}#statusline{margin-top:6px}
+header{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:8px}
 .brand{display:flex;align-items:center;gap:12px}
 .logo{width:40px;height:40px;border-radius:11px;overflow:hidden;flex:none}
 .logo svg{display:block;width:100%;height:100%}
@@ -45,7 +47,7 @@ button.btn{cursor:pointer;font:600 13px var(--font);color:var(--text);background
 button.btn:active{transform:scale(.96);background:#262d38}
 button.btn.spin svg{animation:rot 1s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
-nav{display:flex;gap:2px;padding:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;margin-bottom:16px;position:sticky;top:8px;z-index:20}
+nav{display:flex;gap:2px;padding:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;margin-bottom:4px}
 nav a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;padding:10px 8px;border-radius:999px;font-size:13.5px;font-weight:600;color:var(--mut);text-decoration:none;cursor:pointer;transition:background .15s,color .15s}
 nav a svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 nav a:active{background:rgba(255,255,255,.06)}
@@ -203,6 +205,7 @@ details[open]>summary .chev{transform:rotate(-135deg);margin-bottom:-3px}
 .shs{color:var(--mut);font-size:12.5px}
 html.nosc{overflow:hidden}
 @media(max-width:720px){
+  .live{flex-wrap:nowrap;gap:6px}.brand{min-width:0}h1{white-space:nowrap}header{margin-bottom:0}.brand .logo{width:34px;height:34px}.brand h1{font-size:17px}#subtitle{display:none}.pill{padding:5px 9px;font-size:11.5px}button.btn#refresh{padding:0;width:38px;height:34px;display:grid;place-items:center}button.btn#refresh svg{margin:0!important}.bt{display:none}
   nav{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));top:auto;border-radius:30px;border:1px solid rgba(255,255,255,.12);margin:0;padding:6px;background:rgba(22,27,34,.96);box-shadow:0 10px 30px rgba(0,0,0,.55);z-index:30;gap:2px}
   nav a{flex-direction:column;gap:3px;padding:8px 2px;font-size:10.5px;border-radius:24px}
   .wrap{padding-bottom:calc(108px + env(safe-area-inset-bottom))}
@@ -214,11 +217,18 @@ html.nosc{overflow:hidden}
 .rm{flex:1;min-width:0}.rt{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rs{font-size:12px;color:var(--mut);margin-top:2px}
 .rk{text-align:right;flex:none}.rk b{font-size:18px;font-weight:650}.rk span{font-size:11px;color:var(--mut);margin-left:3px}
 .lnks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.lnk{font-size:12.5px;font-weight:600;color:var(--run);text-decoration:none;border:1px solid rgba(79,209,197,.35);padding:7px 12px;border-radius:999px}
+.btn.pri{background:var(--run);color:#06120f;border:0}
+.sheet label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px;font-weight:600}
+.sheet input{width:100%;padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font:500 16px var(--font);color-scheme:dark}
+.frow{display:flex;gap:10px}.frow label{flex:1}
+.pres{display:flex;flex-wrap:wrap;gap:6px}.pres button{font:600 12.5px var(--font);color:var(--text);background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:7px 12px}
+.gedit{padding:10px;margin:0 -10px;border-radius:14px}.gedit:active{background:rgba(255,255,255,.04)}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="0 0 100 100"><rect x="1" y="1" width="98" height="98" rx="25" fill="#111113" stroke="rgba(255,255,255,.16)" stroke-width="2"/><g fill="#fff"><rect x="11" y="37" width="9.5" height="26" rx="4.75"/><rect x="79.5" y="37" width="9.5" height="26" rx="4.75"/><rect x="24" y="24" width="11.5" height="52" rx="5.75"/><rect x="64.5" y="24" width="11.5" height="52" rx="5.75"/><rect x="33" y="43.75" width="34" height="12.5"/><path d="M35.5 39.75V44H39.5V43.75A4 4 0 0 1 35.5 39.75Z"/><path d="M64.5 39.75V44H60.5V43.75A4 4 0 0 0 64.5 39.75Z"/><path d="M35.5 60.25V56H39.5V56.25A4 4 0 0 0 35.5 60.25Z"/><path d="M64.5 60.25V56H60.5V56.25A4 4 0 0 1 64.5 60.25Z"/></g></symbol></svg>
 <div class="wrap">
+  <div class="top" id="top">
   <header>
     <div class="brand">
       <div class="logo"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#logo"/></svg></div>
@@ -226,13 +236,14 @@ html.nosc{overflow:hidden}
     </div>
     <div class="live">
       <span class="pill" id="pdata"><i class="dot"></i><span>Cargando…</span></span>
-      <button class="btn" id="refresh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:5px"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Actualizar</button>
+      <button class="btn" id="refresh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:5px"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg><span class="bt">Actualizar</span></button>
     </div>
   </header>
-  <div class="sub" id="statusline" style="margin:-4px 0 12px"></div>
+  <div class="sub" id="statusline"></div>
   <nav id="nav" aria-label="Secciones">
     <a data-t="resumen" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg><span>Resumen</span></a><a data-t="semana" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>Semana</span></a><a data-t="fuerza" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg><span>Fuerza</span></a><a data-t="carrera" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span>Carrera</span></a><a data-t="recuperacion" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><span>Sueño</span></a><a data-t="cuerpo" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="3.2"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/></svg><span>Cuerpo</span></a>
   </nav>
+  </div>
   <section class="tab" id="t-resumen"></section>
   <section class="tab" id="t-semana"></section>
   <section class="tab" id="t-fuerza"></section>
@@ -428,12 +439,7 @@ T.resumen=function(){
   if(rhrs.length&&rhrs.every(v=>v>=51))chips.push(['bad',`FC reposo ≥51 tres días seguidos: recorta intensidad`]);
   if(D.status?.acwr_status)chips.push([D.status.acwr_status==='OPTIMAL'?'good':'warn',`Carga aguda/crónica <b>${nf(D.status.load_ratio,2)}</b> · ${esc(String(D.status.acwr_status).toLowerCase())}`]);
   const sig=card('Señales del preparador',`<div class="chips">${chips.map(c=>`<span class="chip ${c[0]}">${c[1]}</span>`).join('')||'<div class="empty">Sin datos todavía</div>'}</div><div class="note">Reglas de tu plan: recortar si sueño &lt;6,5 h, FC reposo ≥51 varios días, VFC &lt;75–80 o dolor.</div>`);
-  const bs=exerciseSeries('Press de Banca (Barra)'),bt=bs.length?Math.max(...bs.map(s=>s.top.weight_kg)):50;
-  const vo=D.status?.vo2_max_precise||52.4;
-  const goals=card('Objetivos',`
-   <div class="goal"><div class="gh"><b>Banca 80 kg</b><span>${nf(bt)} kg · ${Math.round(bt/80*100)}%</span></div><div class="bar"><i style="width:${bt/80*100}%"></i></div></div>
-   <div class="goal"><div class="gh"><b>VO₂máx 55,5 (5K en 20')</b><span>${nf(vo)}</span></div><div class="bar"><i style="width:${Math.max(0,Math.min(100,(vo-50)/(55.5-50)*100))}%"></i></div></div>
-   <div class="goal"><div class="gh"><b>Peso 73–74 kg a 31/12</b><span>media 7 d: ${nf(wa)} kg</span></div><div class="note" style="margin:0">Faltan ≈ ${nf(wa-73.5)} kg · ritmo necesario ≈ ${nf((wa-73.5)/Math.max(1,dRace)*7,2)} kg/semana</div></div>`);
+  const goals=`<div class="tap" data-go="cuerpo">${card('Objetivos',goalsHTML(false),'edítalos en Cuerpo →')}</div>`;
   return hero+tiles+lastC+week+`<div class="grid g2">${sig}${goals}</div>`;
 };
 T.fuerza=function(){
@@ -501,16 +507,17 @@ T.recuperacion=function(){
   return `<div class="toolbar">${seg('rS',[[7,'Última semana'],[14,'2 semanas']],UI.rS)}</div>`+kp+`<div class="grid g2" style="margin-bottom:14px">${sl}${hc}</div><div class="grid g2">${card('FC en reposo (noche)',rch,'ppm')}${card('Qué compone tu "preparado hoy"',fh,'Training Readiness '+(rd.score??'–'))}</div>`;
 };
 T.cuerpo=function(){
-  const ws=WEIGHTS(),ma=movAvg(ws);if(!ws.length)return card('Peso','<div class="empty">Sin pesajes</div>');
+  const ws=WEIGHTS(),ma=movAvg(ws);if(!ws.length)return `<div class="mb">${card('Objetivos',goalsHTML(true))}</div>`+card('Peso','<div class="empty">Sin pesajes</div>');
   const X=d=>Date.parse(d+'T12:00:00Z');
+  const wg=GOALS.find(g=>g.t==='peso');
   const cut=UI.rW?addDays(ws[ws.length-1].date,-UI.rW+1):'';const wsv=ws.filter(w=>w.date>=cut),mav=ma.filter(m=>m.date>=cut);
-  const ch=lineChart({series:[{name:'Peso',color:'rgba(251,191,36,.55)',dots:true,w:1.5,pts:wsv.map(w=>({x:X(w.date),y:w.weight_kg,tip:dShort(w.date)+' · '+nf(w.weight_kg)+' kg'}))},{name:'Media 7 d',color:'var(--wt)',dots:false,w:3,pts:mav.map(m=>({x:X(m.date),y:m.v,tip:dShort(m.date)+' · media 7 d '+nf(m.v,2)+' kg'}))}],xt:wsv.filter((_,i)=>i%Math.max(1,Math.ceil(wsv.length/6))===0).map(w=>({x:X(w.date),l:dShort(w.date)})),h:250,fy:v=>nf(v,1),refs:[{y:73.5,l:'objetivo 31/12: 73–74',c:'#34d399'}],refFit:true});
+  const ch=lineChart({series:[{name:'Peso',color:'rgba(251,191,36,.55)',dots:true,w:1.5,pts:wsv.map(w=>({x:X(w.date),y:w.weight_kg,tip:dShort(w.date)+' · '+nf(w.weight_kg)+' kg'}))},{name:'Media 7 d',color:'var(--wt)',dots:false,w:3,pts:mav.map(m=>({x:X(m.date),y:m.v,tip:dShort(m.date)+' · media 7 d '+nf(m.v,2)+' kg'}))}],xt:wsv.filter((_,i)=>i%Math.max(1,Math.ceil(wsv.length/6))===0).map(w=>({x:X(w.date),l:dShort(w.date)})),h:250,fy:v=>nf(v,1),refs:wg?[{y:wg.kg,l:'objetivo '+nf(wg.kg),c:'#34d399'}]:[],refFit:true});
   const wk={};ws.forEach(w=>{const k=weekStart(w.date);(wk[k]=wk[k]||[]).push(w.weight_kg)});
   const ks=Object.keys(wk).sort();
   const rows=ks.map((k,i)=>{const a=avg(wk[k]),p=i?avg(wk[ks[i-1]]):null,d=p!=null?a-p:null;return `<tr><td>S${weekNum(k)} · ${dShort(k)}</td><td class="n">${nf(a,2)} kg</td><td class="n ${d==null?'':d<=-0.15?'up':d>=0.15?'down':'neu'}">${d==null?'–':(d>0?'+':'')+nf(d,2)}</td><td class="n">${wk[k].length}</td></tr>`}).join('');
-  const cur=ma[ma.length-1].v,first=mav[0].v;
-  const kp=`<div class="grid g3 wkt" style="margin-bottom:14px">${kpi('Media 7 días',nf(cur,2),'kg','último pesaje '+nf(ws[ws.length-1].weight_kg)+' kg','neu')}${kpi('Cambio en el periodo',(cur-first>0?'+':'')+nf(cur-first,2),'kg','de '+dShort(wsv[0].date)+' a '+dShort(ws[ws.length-1].date),cur-first<=0?'up':'wa')}${kpi('Para el objetivo (73,5 kg)',nf(cur-73.5,1),'kg','a 31/12 · '+diffDays(today(),'2026-12-31')+' días','neu')}</div>`;
-  return `<div class="toolbar">${seg('rW',[[14,'14 días'],[30,'30 días'],[0,'Todo']],UI.rW)}</div>`+kp+`<div class="grid g21">${card('Peso corporal',ch+`<div class="leg"><span style="--c:var(--wt)">Media móvil 7 días</span><span style="--c:rgba(251,191,36,.55)">Pesaje diario</span></div>`,'Garmin Connect')}${card('Media semanal',`<div class="tw"><table><tr><th>Semana</th><th class="n">Media</th><th class="n">Δ</th><th class="n">n</th></tr>${rows}</table></div><div class="note">Regla de tu plan: si 2 semanas con pérdida &lt;0,3 kg/semana, recortar ≈150 kcal; si &gt;0,9, subir ≈150. El peso sube con la creatina al principio: mira siempre la media.</div>`)}</div>`;
+  const cur=ma[ma.length-1].v,first=mav[0].v; 
+  const kp=`<div class="grid g3 wkt" style="margin-bottom:14px">${kpi('Media 7 días',nf(cur,2),'kg','último pesaje '+nf(ws[ws.length-1].weight_kg)+' kg','neu')}${kpi('Cambio en el periodo',(cur-first>0?'+':'')+nf(cur-first,2),'kg','de '+dShort(wsv[0].date)+' a '+dShort(ws[ws.length-1].date),cur-first<=0?'up':'wa')}${wg?kpi('Para el objetivo ('+nf(wg.kg)+' kg)',nf(cur-wg.kg,1),'kg',(wg.date?'a '+dShort(wg.date)+' · '+diffDays(today(),wg.date)+' días':'sin fecha límite'),'neu'):kpi('Objetivo de peso','–','','añádelo abajo en Objetivos','neu')}</div>`;
+  return `<div class="mb">${card('Objetivos',goalsHTML(true),'toca uno para editarlo')}</div>`+`<div class="toolbar">${seg('rW',[[14,'14 días'],[30,'30 días'],[0,'Todo']],UI.rW)}</div>`+kp+`<div class="grid g21">${card('Peso corporal',ch+`<div class="leg"><span style="--c:var(--wt)">Media móvil 7 días</span><span style="--c:rgba(251,191,36,.55)">Pesaje diario</span></div>`,'Garmin Connect')}${card('Media semanal',`<div class="tw"><table><tr><th>Semana</th><th class="n">Media</th><th class="n">Δ</th><th class="n">n</th></tr>${rows}</table></div><div class="note">Regla de tu plan: si 2 semanas con pérdida &lt;0,3 kg/semana, recortar ≈150 kcal; si &gt;0,9, subir ≈150. El peso sube con la creatina al principio: mira siempre la media.</div>`)}</div>`;
 };
 
 /* ───────────── detalle de actividades ───────────── */
@@ -636,6 +643,70 @@ T.semana=function(){
   return hdr+tiles+`<div id="wkdays">${cards}</div>`;
 };
 
+/* ───────────── objetivos (editables; se guardan en este móvil) ───────────── */
+const GK='cf_goals';
+const DEF_GOALS=[{id:'g1',t:'peso',kg:73.5,date:'2026-12-31'},{id:'g2',t:'fuerza',ex:'Press de Banca (Barra)',kg:80,reps:1},{id:'g3',t:'carrera',km:3.5,sec:840},{id:'g4',t:'carrera',km:5,sec:1200}];
+let GOALS=(()=>{try{const j=JSON.parse(localStorage.getItem(GK)||'null');if(Array.isArray(j))return j}catch(e){}return DEF_GOALS.map(g=>({...g}))})();
+const saveGoals=()=>{try{localStorage.setItem(GK,JSON.stringify(GOALS))}catch(e){}};
+const num=v=>parseFloat(String(v).trim().replace(',','.'));
+function parseTime(v){const p=String(v).trim().replace(',','.').split(':').map(Number);if(!p.length||p.some(x=>isNaN(x)||x<0))return null;let t=0;if(p.length===1)t=p[0]*60;else if(p.length===2)t=p[0]*60+p[1];else if(p.length===3)t=p[0]*3600+p[1]*60+p[2];else return null;return t>0?Math.round(t):null}
+const fmtT=sec=>{sec=Math.round(sec);return sec>=3600?Math.floor(sec/3600)+':'+String(Math.floor(sec%3600/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0'):mmss(sec)};
+const kmLab=k=>nf(k,2)+' km';
+const estSec=km=>{const p5=D.pred?.predictions?.['5K']?.time_seconds;return p5?p5*Math.pow(km/5,1.06):null};
+const clamp=v=>Math.max(0,Math.min(100,v));
+const e1of=(w,r)=>w*(1+r/30);
+function goalCalc(g){
+  if(g.t==='peso'){
+    const ws=WEIGHTS(),ma=movAvg(ws),cur=ma.length?ma[ma.length-1].v:null,start=ws.length?ws[0].weight_kg:null;
+    const title='Peso '+nf(g.kg)+' kg'+(g.date?' · '+dShort(g.date):'');
+    if(cur==null)return {title,pct:0,right:'–',note:'Sin pesajes todavía'};
+    const dir=g.kg<start?-1:1,total=Math.abs(start-g.kg)||1,pct=clamp((cur-start)*dir/total*100),rem=Math.max(0,(g.kg-cur)*dir);
+    const days=g.date?diffDays(today(),g.date):null;
+    return {title,pct,right:nf(cur,1)+' kg',note:rem<=0?'¡Objetivo conseguido!':`Faltan ${nf(rem,1)} kg`+(days>0?` · ritmo necesario ≈ ${nf(rem/days*7,2)} kg/semana`:days!=null?' · fecha pasada':'')+` · media 7 d`};
+  }
+  if(g.t==='fuerza'){
+    const title=`${g.ex} · ${nf(g.kg)} kg × ${g.reps}`,ser=exerciseSeries(g.ex);
+    if(!ser.length)return {title,pct:0,right:'–',note:'Sin datos de este ejercicio en Hevy (revisa el nombre)'};
+    const tgt=e1of(g.kg,g.reps),best=ser.reduce((a,x)=>x.e1>a.e1?x:a,ser[0]);
+    const hit=ser.some(x=>x.sets.some(t=>t.weight_kg>=g.kg&&t.reps>=g.reps));
+    return {title,pct:hit?100:clamp(best.e1/tgt*100),right:nf(best.top.weight_kg)+' × '+best.top.reps,note:hit?'¡Objetivo conseguido!':`Mejor marca ${nf(best.top.weight_kg)} kg × ${best.top.reps} · 1RM est. ${nf(best.e1)} de ${nf(tgt)} kg`};
+  }
+  const est=estSec(g.km),title=`${kmLab(g.km)} en ${fmtT(g.sec)}`,pc=mmss(g.sec/g.km)+'/km';
+  if(!est)return {title,pct:0,right:'–',note:'Objetivo '+pc+' · sin predicción de Garmin todavía'};
+  return {title,pct:clamp(g.sec/est*100),right:fmtT(est),note:`Estimado Garmin ${fmtT(est)} · ${est>g.sec?'faltan '+fmtT(est-g.sec):'¡al alcance!'} · ritmo objetivo ${pc}`};
+}
+function goalsHTML(edit){
+  const order={peso:0,fuerza:1,carrera:2};
+  const list=GOALS.slice().sort((a,b)=>order[a.t]-order[b.t]);
+  const rows=list.map(g=>{const c=goalCalc(g);return `<div class="goal${edit?' tap gedit':''}" ${edit?`data-gedit="${g.id}"`:''}><div class="gh"><b>${esc(c.title)}</b><span>${esc(c.right)}</span></div><div class="bar"><i style="width:${c.pct.toFixed(1)}%"></i></div><div class="note" style="margin:6px 0 0">${esc(c.note)}</div></div>`}).join('');
+  return (rows||'<div class="empty">Sin objetivos todavía</div>')+(edit?'<button class="btn pri" data-gedit="new" style="width:100%;margin-top:12px;padding:12px">+ Añadir objetivo</button>':'');
+}
+const GT={peso:'Peso',fuerza:'Fuerza',carrera:'Carrera'};
+function goalSheet(){
+  const {g,isNew}=UI.gf,t=g.t;
+  const names=[...new Set(W().flatMap(w=>(hev.det.get(w.id)?.exercises||[]).map(e=>e.title)))].sort((a,b)=>a.localeCompare(b,'es'));
+  let f='';
+  if(t==='peso')f=`<label>Peso objetivo (kg)<input name="kg" inputmode="decimal" value="${g.kg??''}" required placeholder="73,5"></label><label>Fecha límite (opcional)<input name="date" type="date" value="${g.date||''}"></label>`;
+  if(t==='fuerza')f=`<label>Ejercicio (escribe y elige)<input name="ex" list="exl" value="${esc(g.ex||'')}" required autocomplete="off" placeholder="Press de Banca (Barra)"></label><datalist id="exl">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist><div class="frow"><label>Peso (kg)<input name="kg" inputmode="decimal" value="${g.kg??''}" required></label><label>Repeticiones<input name="reps" inputmode="numeric" value="${g.reps??''}" required></label></div>`;
+  if(t==='carrera')f=`<div class="sub2">Distancias habituales</div><div class="pres">${[1,3.5,5,10,21.1,42.2].map(k=>`<button type="button" data-km="${k}">${nf(k,1)} km</button>`).join('')}</div><label>Distancia (km)<input name="km" id="kmin" inputmode="decimal" value="${g.km??''}" required placeholder="5"></label><label>Tiempo objetivo (mm:ss o h:mm:ss)<input name="time" inputmode="numeric" value="${g.sec?fmtT(g.sec):''}" required placeholder="20:00"></label>`;
+  const tabs=isNew?`<div style="margin:10px 0 2px"><div class="seg">${['peso','fuerza','carrera'].map(k=>`<button type="button" class="${k===t?'on':''}" data-gtype="${k}">${GT[k]}</button>`).join('')}</div></div>`:'';
+  return `<div class="sht">${isNew?'Nuevo objetivo':'Editar objetivo · '+GT[t]}</div>${tabs}<form id="gform" autocomplete="off">${f}<div id="gerr" class="note wa" style="min-height:18px"></div><div class="frow" style="margin-top:6px"><button class="btn pri" type="submit" style="flex:2;padding:13px">Guardar</button>${isNew?'':'<button class="btn" type="button" data-act="gdel" style="flex:1;padding:13px;color:#fb7185">Borrar</button>'}</div></form>`;
+}
+function openGoal(id){
+  const g=id==='new'?{id:'g'+Date.now(),t:'carrera'}:{...GOALS.find(x=>x.id===id)};
+  if(!g.t)return;UI.gf={g,isNew:id==='new'};openSheet(goalSheet());
+}
+document.addEventListener('submit',e=>{
+  if(e.target.id!=='gform')return;e.preventDefault();
+  const f=new FormData(e.target),{g,isNew}=UI.gf,err=m=>{document.getElementById('gerr').textContent=m};
+  let n={id:g.id,t:g.t};
+  if(g.t==='peso'){const kg=num(f.get('kg'));if(!(kg>30&&kg<250))return err('Escribe un peso válido en kg.');n.kg=kg;n.date=f.get('date')||''}
+  if(g.t==='fuerza'){const kg=num(f.get('kg')),reps=parseInt(f.get('reps'),10),ex=String(f.get('ex')).trim();if(!ex)return err('Elige un ejercicio.');if(!(kg>0&&kg<600))return err('Peso no válido.');if(!(reps>=1&&reps<=30))return err('Repeticiones: de 1 a 30.');Object.assign(n,{ex,kg,reps})}
+  if(g.t==='carrera'){const km=num(f.get('km')),sec=parseTime(f.get('time'));if(!(km>0&&km<=250))return err('Distancia no válida.');if(!sec)return err('Tiempo no válido. Ejemplo: 20:00 o 1:45:00.');Object.assign(n,{km,sec})}
+  if(isNew)GOALS.push(n);else GOALS=GOALS.map(x=>x.id===n.id?n:x);
+  saveGoals();vib(12);closeSheet();mark(['cuerpo','resumen'],true);
+});
+
 /* ───────────── pintado ───────────── */
 const TABS=['resumen','semana','fuerza','carrera','recuperacion','cuerpo'];
 let cur='resumen',dirty=new Set(TABS),raf=0;
@@ -653,6 +724,7 @@ function openRun(id){
 }
 async function act(a,el){
   if(a==='close')return closeSheet();
+  if(a==='gdel'){if(UI.gf&&confirm('¿Borrar este objetivo?')){GOALS=GOALS.filter(x=>x.id!==UI.gf.g.id);saveGoals();closeSheet();mark(['cuerpo','resumen'],true)}return}
   if(a==='share'){const tx=T._share||'';try{if(navigator.share)await navigator.share({title:'Cambio físico',text:tx});else{await navigator.clipboard.writeText(tx);if(el){el.textContent='Copiado ✓';setTimeout(()=>el.textContent='Compartir',1500)}}}catch(e){}return}
   if(a==='wk-prev'&&UI.wk>W1)UI.wk=addDays(UI.wk,-7);
   else if(a==='wk-next'&&UI.wk<weekStart(today()))UI.wk=addDays(UI.wk,7);
@@ -665,6 +737,9 @@ document.getElementById('nav').addEventListener('click',e=>{const a=e.target.clo
 addEventListener('hashchange',()=>go(location.hash.slice(1)));
 document.addEventListener('click',e=>{
   let el;
+  if((el=e.target.closest('[data-gedit]'))){openGoal(el.dataset.gedit);return}
+  if((el=e.target.closest('[data-gtype]'))){UI.gf.g={id:UI.gf.g.id,t:el.dataset.gtype};shc.innerHTML=goalSheet();return}
+  if((el=e.target.closest('[data-km]'))){document.getElementById('kmin').value=el.dataset.km;return}
   if((el=e.target.closest('[data-seg]'))){const v=el.dataset.v;UI[el.dataset.seg]=isNaN(v)?v:Number(v);vib();mark([cur],true);return}
   if((el=e.target.closest('[data-act]'))){act(el.dataset.act,el);return}
   if((el=e.target.closest('[data-run]'))){openRun(el.dataset.run);return}
@@ -716,7 +791,7 @@ function status(){
   if(min>100)bits.push('la sincronización lleva un rato sin actualizar');
   if(meta.errors.length)bits.push('no se pudo leer: '+meta.errors.map(e=>String(e).split(':')[0]).join(', '));
   if(meta.err)bits.push(meta.err);
-  sl.innerHTML=bits.length?`<span class="wa">${esc(bits.join(' · '))}</span>`:`Actualizado ${new Date(meta.at).toLocaleString('es-ES',{timeZone:TZ,weekday:'short',hour:'2-digit',minute:'2-digit'})} · se refresca solo`;
+  sl.innerHTML=bits.length?`<span class="wa">${esc(bits.join(' · '))}</span>`:'';
 }
 let loading=false,lastFetch=0,lastSig='';
 async function load(manual){
