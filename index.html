@@ -258,7 +258,7 @@ html.nosc{overflow:hidden}
   <section class="tab" id="t-carrera"></section>
   <section class="tab" id="t-recuperacion"></section>
   <section class="tab" id="t-cuerpo"></section>
-  <footer>Datos de Hevy y Garmin Connect, sincronizados cada 30 minutos y cifrados. <a href="#" id="chpass" style="color:var(--mut)">Cambiar clave</a></footer>
+  <footer>Datos de Hevy y Garmin Connect, sincronizados y cifrados. <a href="#" id="chpass" style="color:var(--mut)">Cambiar clave</a> · <a href="#" id="ghtok" style="color:var(--mut)">Clave de GitHub</a></footer>
 </div>
 <div class="sheet" id="sheet" hidden><div class="sb" data-act="close"></div><div class="sp"><div class="grab" id="grab"></div><div id="shc"></div></div></div>
 <div id="lock" style="display:none;position:fixed;inset:0;z-index:100;background:var(--bg);place-items:center;padding:24px">
@@ -798,6 +798,7 @@ function applyData(j){
 function clearData(){KEYS.forEach(k=>D[k]=null);hev.list.clear();hev.det.clear();ver++;lastSig='';mark(TABS)}
 function showLock(msg){const l=document.getElementById('lock');l.style.display='grid';if(msg)document.getElementById('lockmsg').textContent=msg;setTimeout(()=>document.getElementById('pass').focus(),50)}
 function status(){
+  if(syncMsg){document.getElementById('statusline').innerHTML=`<span class="wa">${esc(syncMsg)}</span>`;if(!meta.ok)return}
   const dot=document.querySelector('#pdata .dot'),tx=document.querySelector('#pdata span'),sl=document.getElementById('statusline');
   if(!meta.ok){dot.className='dot'+(meta.err?' err':'');tx.textContent=meta.err?'Sin datos':'Cargando…';sl.innerHTML=meta.err?`<span class="wa">${esc(meta.err)}</span>`:'';return}
   const min=Math.max(0,Math.round((Date.now()-meta.at)/60000));
@@ -807,14 +808,43 @@ function status(){
   if(min>100)bits.push('la sincronización lleva un rato sin actualizar');
   if(meta.errors.length)bits.push('no se pudo leer: '+meta.errors.map(e=>String(e).split(':')[0]).join(', '));
   if(meta.err)bits.push(meta.err);
-  sl.innerHTML=bits.length?`<span class="wa">${esc(bits.join(' · '))}</span>`:'';
+  if(!syncMsg)sl.innerHTML=bits.length?`<span class="wa">${esc(bits.join(' · '))}</span>`:'';
 }
-let loading=false,lastFetch=0,lastSig='';
+let loading=false,lastFetch=0,lastSig='',syncMsg='';
+/* «Actualizar»: si hay clave de GitHub guardada, lanza la sincronización real y espera a que termine */
+const GH_API='https://api.github.com/repos/marcoskraby1/cambio-f-sico/actions/workflows/sync.yml';
+async function ghSync(tok){
+  const H={Authorization:'Bearer '+tok,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+  const t0=Date.now()-5000;
+  const r=await fetch(GH_API+'/dispatches',{method:'POST',headers:H,body:JSON.stringify({ref:'main'})});
+  if(r.status===401||r.status===403||r.status===404){const e=new Error('tok');e.tok=1;throw e}
+  if(r.status!==204)throw new Error('gh '+r.status);
+  syncMsg='Sincronizando con Garmin y Hevy…';status();
+  for(let i=0;i<30;i++){
+    await new Promise(z=>setTimeout(z,4000));
+    const q=await fetch(GH_API+'/runs?event=workflow_dispatch&per_page=3',{headers:H});if(!q.ok)continue;
+    const runs=(await q.json()).workflow_runs||[];
+    const run=runs.find(x=>new Date(x.created_at).getTime()>=t0);
+    if(run&&run.status==='completed'){if(run.conclusion==='success')return true;throw new Error('run '+run.conclusion)}
+  }
+  throw new Error('timeout');
+}
+let lastSync=0;
 async function load(manual){
   if(loading)return;const pass=LS.get('cf_pass');if(!pass){showLock();return}
   if(!manual&&meta.ok&&lastFetch&&Date.now()-lastFetch<60e3)return;
   loading=true;const b=document.getElementById('refresh');if(manual)b.classList.add('spin');
   try{
+    const tok=LS.get('cf_gh');
+    if(manual&&tok){
+      if(Date.now()-lastSync<60e3){syncMsg='Espera un minuto entre sincronizaciones';status();setTimeout(()=>{syncMsg='';status()},3000)}
+      else{
+        lastSync=Date.now();
+        try{await ghSync(tok);await new Promise(z=>setTimeout(z,2500))}
+        catch(e){syncMsg=e.tok?'La clave de GitHub no vale: cámbiala abajo del todo':'No se pudo sincronizar ('+e.message+'). Muestro los últimos datos';status();setTimeout(()=>{syncMsg='';status()},6000);lastSync=0}
+        if(syncMsg.startsWith('Sincronizando')){syncMsg='';status()}
+      }
+    }
     if(!meta.ok&&!manual&&!lastSig){ /* arranque: pinta al instante la última copia guardada y luego actualiza */
       try{const rc=await fetch(DATA_URL+'?cached=1');if(rc.ok){const ec=await rc.json();const jc=await decrypt(ec,pass);lastSig=ec.iv+ec.salt+ec.ct.length;document.getElementById('lock').style.display='none';applyData(jc);lastFetch=0}}catch(e){}
     }
@@ -832,6 +862,11 @@ async function load(manual){
 }
 document.getElementById('lockform').addEventListener('submit',e=>{e.preventDefault();const v=document.getElementById('pass').value;if(!v)return;LS.set('cf_pass',v);document.getElementById('pass').value='';load(true)});
 document.getElementById('refresh').addEventListener('click',()=>load(true));
+document.getElementById('ghtok').addEventListener('click',e=>{e.preventDefault();
+  const v=prompt('Pega tu clave de GitHub (token con permiso solo de Actions en este repositorio).\nDéjalo vacío para borrarla.',LS.get('cf_gh')?'(ya guardada)':'');
+  if(v===null||v==='(ya guardada)')return;
+  const t=v.trim();if(t){LS.set('cf_gh',t);syncMsg='Clave guardada. Pulsa Actualizar';status();setTimeout(()=>{syncMsg='';status()},4000)}else{LS.del('cf_gh');syncMsg='Clave borrada';status();setTimeout(()=>{syncMsg='';status()},3000)}
+});
 document.getElementById('chpass').addEventListener('click',e=>{e.preventDefault();LS.del('cf_pass');clearData();meta.ok=false;lastSig='';status();showLock('Escribe la nueva clave.')});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 addEventListener('online',()=>load());
