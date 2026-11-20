@@ -1,0 +1,49 @@
+name: Sincronizar y publicar
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.dep.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependencias
+        run: pip install garminconnect requests cryptography
+      - name: Restaurar sesión de Garmin
+        env:
+          GARMIN_TOKENS_B64: ${{ secrets.GARMIN_TOKENS_B64 }}
+        run: |
+          if [ -n "$GARMIN_TOKENS_B64" ]; then echo "$GARMIN_TOKENS_B64" | base64 -d | tar xz -C ~; fi
+      - name: Sincronizar Hevy y Garmin
+        env:
+          APP_PASSPHRASE: ${{ secrets.APP_PASSPHRASE }}
+          HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
+        run: python sync.py
+      - name: Preparar web
+        run: cp index.html manifest.webmanifest sw.js icon-*.png site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: dep
+        uses: actions/deploy-pages@v4

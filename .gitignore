@@ -1,0 +1,5 @@
+garmin_tokens_b64.txt
+garmin_tokens.json
+.garminconnect/
+site/
+__pycache__/
