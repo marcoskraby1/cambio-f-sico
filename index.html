@@ -822,8 +822,9 @@ async function ghSync(tok){
   if(r.status===401||r.status===403||r.status===404){const e=new Error('tok');e.tok=1;throw e}
   if(r.status!==204)throw new Error('gh '+r.status);
   syncMsg='Sincronizando con Garmin y Hevy…';status();
-  for(let i=0;i<30;i++){
-    await new Promise(z=>setTimeout(z,4000));
+  await new Promise(z=>setTimeout(z,12000));
+  for(let i=0;i<60;i++){
+    await new Promise(z=>setTimeout(z,2000));
     const q=await fetch(GH_API+'/runs?event=workflow_dispatch&per_page=3',{headers:H});if(!q.ok)continue;
     const runs=(await q.json()).workflow_runs||[];
     const run=runs.find(x=>new Date(x.created_at).getTime()>=t0);
@@ -842,7 +843,7 @@ async function load(manual){
       if(Date.now()-lastSync<60e3){syncMsg='Espera un minuto entre sincronizaciones';status();setTimeout(()=>{syncMsg='';status()},3000)}
       else{
         lastSync=Date.now();
-        try{await ghSync(tok);await new Promise(z=>setTimeout(z,2500))}
+        try{await ghSync(tok);await new Promise(z=>setTimeout(z,1000))}
         catch(e){syncMsg=e.tok?'La clave de GitHub no vale: cámbiala abajo del todo':'No se pudo sincronizar ('+e.message+'). Muestro los últimos datos';status();setTimeout(()=>{syncMsg='';status()},6000);lastSync=0}
         if(syncMsg.startsWith('Sincronizando')){syncMsg='';status()}
       }
