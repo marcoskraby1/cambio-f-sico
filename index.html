@@ -32,8 +32,9 @@ a,button,summary,select,nav a,label{touch-action:manipulation}
 :focus{outline:none}:focus-visible{outline:2px solid var(--run);outline-offset:2px}
 svg text{font-family:var(--font)}
 .wrap{max-width:1100px;margin:0 auto;padding:0 16px calc(56px + env(safe-area-inset-bottom))}
-.top{position:sticky;top:0;z-index:40;background:transparent;padding:calc(10px + env(safe-area-inset-top)) 0 8px;margin:0 -16px 8px;padding-left:16px;padding-right:16px}
-.top::before{content:"";position:absolute;left:0;right:0;top:0;bottom:-26px;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(9,10,12,.9) 0,rgba(9,10,12,.72) 55%,rgba(9,10,12,0) 100%);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 62%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 62%,transparent 100%)}
+.top{position:sticky;top:0;z-index:40;background:transparent;padding:calc(10px + env(safe-area-inset-top)) 0 8px;margin:0 -16px 16px;padding-left:16px;padding-right:16px}
+.top::before{content:"";position:absolute;left:0;right:0;top:0;bottom:0;z-index:-1;pointer-events:none;background:rgba(9,10,12,.88);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 70%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 70%,transparent 100%)}
+.top::after{content:"";position:absolute;left:0;right:0;top:100%;height:14px;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(9,10,12,.55),rgba(9,10,12,0))}
 #statusline{font-size:12px;color:var(--mut)}#statusline:empty{display:none}#statusline{margin-top:6px}
 header{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:8px}
 .brand{display:flex;align-items:center;gap:12px}
@@ -74,6 +75,7 @@ section.tab.on{display:block;animation:in .16s ease-out}
 .kpi .v small{font-size:13px;font-weight:500;color:var(--mut);margin-left:3px;letter-spacing:0}
 .kpi .d{font-size:12px;margin-top:6px;font-weight:500}
 .up{color:var(--good)}.down{color:var(--rhr)}.neu{color:var(--mut)}.wa{color:var(--warn)}
+.kpi .v.up{color:var(--good)}.kpi .v.down{color:var(--rhr)}.kpi .v.wa{color:var(--warn)}.kpi .v.neu{color:var(--text)}
 .count{display:flex;gap:12px;flex-wrap:nowrap}.count>div{flex:1;min-width:0}
 .count .n{font-size:30px;font-weight:650;line-height:1;letter-spacing:-.03em}
 .count .t{font-size:11.5px;color:var(--mut);margin-top:4px}
@@ -386,7 +388,7 @@ function plateau(ser){
 
 /* ───────────── render ───────────── */
 function card(t,b,small,cls=''){return `<div class="card ${cls}"><h3>${t}${small?`<small>${small}</small>`:''}</h3>${b}</div>`}
-function kpi(l,v,u,d,dc,go){return `<div class="card kpi${go?' tap':''}"${go?` data-go="${go}"`:''}><div class="v">${v}${u?`<small>${u}</small>`:''}</div><div class="l">${l}</div>${d?`<div class="d ${dc||'neu'}">${d}</div>`:''}</div>`}
+function kpi(l,v,u,d,dc,go){return `<div class="card kpi${go?' tap':''}"${go?` data-go="${go}"`:''}><div class="v${!d&&dc?' '+dc:''}">${v}${u?`<small>${u}</small>`:''}</div><div class="l">${l}</div>${d?`<div class="d ${dc||'neu'}">${d}</div>`:''}</div>`}
 const T={};
 T.resumen=function(){
   const td=today(),ws=weekStart(td),wn=weekNum(ws);
@@ -403,21 +405,20 @@ T.resumen=function(){
   const fb=({WELL_RECOVERED:'Bien recuperado',READY_TO_GO:'Listo para entrenar',RECOVERED_AND_READY:'Recuperado y listo'})[rd.feedback]||String(rd.feedback||'').replace(/_/g,' ').toLowerCase();
   const hero=`<div class="grid g2 mb">
    <div class="card"><h3>Preparación de hoy <small>Garmin</small></h3><div class="flex">${ring(rd.score??0,lvl,rd.score??'–',rd.level?String(rd.level).toLowerCase():'')}
-    <div style="font-size:13.5px;color:var(--mut)"><div style="color:var(--text);font-weight:600;margin-bottom:4px">${esc(fb)}</div>Sueño ${rd.sleep_factor_percent??'–'}% · VFC ${rd.hrv_factor_percent??'–'}%<br>Carga aguda ${rd.acute_load??'–'}</div></div></div>
-   <div class="card"><h3>Cuenta atrás <small>Semana S${wn}${PHASE[wn]?' · '+PHASE[wn]:''}</small></h3>
-    <div class="count"><div><div class="n">${dTest>0?dTest:'—'}</div><div class="t">días al test 3,5K (mar 8/12)</div></div>
-    <div><div class="n">${dRace>0?dRace:'—'}</div><div class="t">días a la carrera (jue 31/12)</div></div>
-    <div><div class="n">${r35?mmss(r35):'–'}</div><div class="t">${r35?'3,5K estimado ('+pace(r35,3500)+')':'3,5K estimado'}</div></div></div>
-    <div class="note">Objetivo 4:00/km · realista 4:05–4:10/km.</div>
+    <div style="font-size:13.5px;color:var(--mut)"><div style="color:var(--text);font-weight:600;margin-bottom:4px">${esc(fb)}</div></div></div></div>
+   <div class="card"><h3>Cuenta atrás</h3>
+    <div class="count"><div><div class="n">${dTest>0?dTest:'—'}</div><div class="t">días al test</div></div>
+    <div><div class="n">${dRace>0?dRace:'—'}</div><div class="t">días a la carrera</div></div>
+    <div><div class="n">${r35?mmss(r35):'–'}</div><div class="t">3,5K estimado</div></div></div>
     <div class="lnks"><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Test 3,5K','20261208','20261209','Test de 3,5K. Km1-2 a 4:08-4:10, sin salir más rápido.')}">+ Calendario · test</a><a class="lnk" target="_blank" rel="noopener" href="${calUrl('Carrera 3,5K','20261231','20270101','Objetivo 4:00/km (realista 4:05-4:10).')}">+ Calendario · carrera</a></div></div></div>`;
   const kmWeek=runs.filter(x=>x.day>=ws).reduce((a,x)=>a+x.km,0),gW=gym.filter(x=>x.day>=ws).length;
   const tiles=`<div class="grid g4 mb">
-   ${kpi('Pasos hoy',nf(st.total_steps,0),'','objetivo 10.000','neu')}
-   ${kpi('Peso (media 7 días)',nf(wa,1),'kg',dW!=null?(dW>0?'+':'')+nf(dW,1)+' kg vs semana anterior':'',dW==null?'neu':dW<=-0.15?'up':dW>=0.15?'down':'neu','cuerpo')}
-   ${kpi('VFC anoche',nf(hl?.last_night_avg_hrv_ms,0),'ms','media semanal '+nf(hl?.weekly_avg_hrv_ms,0)+' ms',hl&&hl.last_night_avg_hrv_ms>=hl.weekly_avg_hrv_ms?'up':'wa','recuperacion')}
-   ${kpi('FC en reposo',nf(st.resting_heart_rate_bpm,0),'ppm','media 7 días '+nf(st.last_7_days_avg_resting_hr,0),st.resting_heart_rate_bpm>=51?'down':'up','recuperacion')}
-   ${kpi('Sueño anoche',last?nf(last.sleep_hours,1):'–','h',last?`puntuación ${last.sleep_score} · dormido ${bedLabel(last.sleep_start)}`:'',last&&lateBed(last.sleep_start)?'wa':'up','recuperacion')}
-   ${kpi('Body Battery',nf(st.body_battery_current,0),'/100','mín. '+nf(st.body_battery_lowest,0)+' · máx. '+nf(st.body_battery_highest,0),'neu','recuperacion')}
+   ${kpi('Pasos hoy',nf(st.total_steps,0),'','','neu')}
+   ${kpi('Peso (media 7 días)',nf(wa,1),'kg',dW!=null?(dW>0?'+':'')+nf(dW,1)+' esta semana':'',dW==null?'neu':dW<=-0.15?'up':dW>=0.15?'down':'neu','cuerpo')}
+   ${kpi('VFC anoche',nf(hl?.last_night_avg_hrv_ms,0),'ms','',hl&&hl.last_night_avg_hrv_ms>=hl.weekly_avg_hrv_ms?'up':'wa','recuperacion')}
+   ${kpi('FC en reposo',nf(st.resting_heart_rate_bpm,0),'ppm','',st.resting_heart_rate_bpm>=51?'down':'up','recuperacion')}
+   ${kpi('Sueño anoche',last?nf(last.sleep_hours,1):'–','h','',last&&lateBed(last.sleep_start)?'wa':'up','recuperacion')}
+   ${kpi('Body Battery',nf(st.body_battery_current,0),'','','neu','recuperacion')}
   </div>`;
   const lr=runs[0],lg=gym[0];
   const lastC=`<div class="grid g2 mb">
@@ -435,7 +436,7 @@ T.resumen=function(){
     if(!pl[2]&&r)ic+='<i class="r">Carrera ✓</i>';
     wk+=`<div class="day ${isT?'today':''}"><div class="dn">${dWd(d)} ${d.slice(8)}</div><div class="pl">${pl[0]}</div><div class="ic">${ic}</div></div>`;
   }
-  const week=`<div class="mb tap" data-go="semana" data-wk="${ws}">${card('Esta semana',`<div class="week">${wk}</div><div class="leg"><span style="--c:var(--str)">Fuerza (Hevy)</span><span style="--c:var(--run)">Carrera (Garmin)</span><span style="--c:var(--warn)">Naranja = no hecho</span></div><div class="note">Toca para ver el detalle de la semana →</div>`)}</div>`;
+  const week=`<div class="mb tap" data-go="semana" data-wk="${ws}">${card('Esta semana',`<div class="week">${wk}</div>`)}</div>`;
   /* señales */
   const chips=[];
   const hw=hl?.weekly_avg_hrv_ms;
@@ -446,7 +447,7 @@ T.resumen=function(){
   const rhrs=ns.slice(-3).map(n=>n.resting_heart_rate_bpm).filter(Boolean);
   if(rhrs.length&&rhrs.every(v=>v>=51))chips.push(['bad',`FC reposo ≥51 tres días seguidos: recorta intensidad`]);
   if(D.status?.acwr_status)chips.push([D.status.acwr_status==='OPTIMAL'?'good':'warn',`Carga aguda/crónica <b>${nf(D.status.load_ratio,2)}</b> · ${esc(String(D.status.acwr_status).toLowerCase())}`]);
-  const sig=card('Señales del preparador',`<div class="chips">${chips.map(c=>`<span class="chip ${c[0]}">${c[1]}</span>`).join('')||'<div class="empty">Sin datos todavía</div>'}</div><div class="note">Reglas de tu plan: recortar si sueño &lt;6,5 h, FC reposo ≥51 varios días, VFC &lt;75–80 o dolor.</div>`);
+  const sig=card('Señales del preparador',`<div class="chips">${chips.map(c=>`<span class="chip ${c[0]}">${c[1]}</span>`).join('')||'<div class="empty">Sin datos todavía</div>'}</div>`);
   const goals=`<div class="tap" data-go="cuerpo">${card('Objetivos',goalsHTML(false),'edítalos en Cuerpo →')}</div>`;
   return hero+tiles+lastC+week+`<div class="grid g2">${sig}${goals}</div>`;
 };
@@ -455,7 +456,7 @@ T.fuerza=function(){
   const last28=w.filter(x=>x.day>=addDays(td,-27));
   const hrs=last28.reduce((a,x)=>a+x.dur,0)/3600,sets=last28.reduce((a,x)=>a+(x.sets||0),0);
   const thisW=w.filter(x=>x.day>=ws).length;
-  const kp=`<div class="grid g4" style="margin-bottom:14px">${kpi('Sesiones (28 días)',last28.length,'','Hevy','neu')}${kpi('Tiempo en el gimnasio',nf(hrs,1),'h','últimos 28 días','neu')}${kpi('Series totales',sets,'','últimos 28 días','neu')}${kpi('Esta semana',thisW,'/4','objetivo: 4 sesiones',thisW>=4?'up':'neu')}</div>`;
+  const kp=`<div class="grid g4" style="margin-bottom:14px">${kpi('Sesiones · 28 días',last28.length,'','','neu')}${kpi('Horas · 28 días',nf(hrs,1),'h','','neu')}${kpi('Series · 28 días',sets,'','','neu')}${kpi('Esta semana',thisW,'/4','',thisW>=4?'up':'neu')}</div>`;
   /* semanas */
   const wk={};w.forEach(x=>{const k=weekStart(x.day);(wk[k]=wk[k]||{n:0,s:0,t:0});wk[k].n++;wk[k].s+=x.sets||0;wk[k].t+=x.dur/60});
   const ks=Object.keys(wk).sort().slice(-8);
@@ -484,7 +485,7 @@ T.carrera=function(){
   const vo=(D.vo2?.trend||[]).slice().sort((a,b)=>a.date<b.date?-1:1);
   const v0=vo[0]?.vo2_max,v1=vo[vo.length-1]?.vo2_max;
   const pr=D.pred?.predictions||{};const p5=pr['5K']?.time_seconds;const r35=p5?p5*Math.pow(3.5/5,1.06):null;
-  const kp=`<div class="grid g4" style="margin-bottom:14px">${kpi('Km últimos 7 días',nf(k7,1),'km','Garmin','neu')}${kpi('Km últimos 28 días',nf(k28,1),'km','','neu')}${kpi('VO₂máx',nf(v1,1),'','desde '+nf(v0,1)+' ('+(v1-v0>=0?'+':'')+nf(v1-v0,1)+') · &lt;0,5 es ruido',v1-v0>0.2?'up':'neu')}${kpi('3,5K estimado',r35?mmss(r35):'–','','ritmo '+(r35?pace(r35,3500):'–'),'neu')}</div>`;
+  const kp=`<div class="grid g4" style="margin-bottom:14px">${kpi('Km · 7 días',nf(k7,1),'km','','neu')}${kpi('Km · 28 días',nf(k28,1),'km','','neu')}${kpi('VO₂máx',nf(v1,1),'','',v1-v0>0.2?'up':'neu')}${kpi('3,5K estimado',r35?mmss(r35):'–','','','neu')}</div>`;
   const wk={};runs.forEach(x=>{const k=weekStart(x.day);wk[k]=(wk[k]||0)+x.km});
   const ks=Object.keys(wk).sort().slice(-8);
   const bars=barChart({items:ks.map(k=>({label:'S'+weekNum(k),sub:dShort(k),top:nf(wk[k],1),segs:[{v:wk[k],c:'var(--run)',tip:`S${weekNum(k)} · ${nf(wk[k],1)} km`}]})),h:210});
@@ -501,7 +502,7 @@ T.recuperacion=function(){
   const items=ns.map(n=>{const h=x=>(x||0)/3600;const late=lateBed(n.sleep_start);return {label:dWd(n.date)+' '+n.date.slice(8),sub:bedLabel(n.sleep_start),subC:late?'#fb923c':'#34d399',top:nf(n.sleep_hours,1),
     segs:[{v:h(n.deep_sleep_seconds),c:'var(--deep)',tip:`${dShort(n.date)} · profundo ${nf(h(n.deep_sleep_seconds))} h`},{v:h(n.light_sleep_seconds),c:'var(--light)',tip:`${dShort(n.date)} · ligero ${nf(h(n.light_sleep_seconds))} h`},{v:h(n.rem_sleep_seconds),c:'var(--rem)',tip:`${dShort(n.date)} · REM ${nf(h(n.rem_sleep_seconds))} h\nPuntuación ${n.sleep_score} · te dormiste ${bedLabel(n.sleep_start)}`},{v:h(n.awake_seconds),c:'var(--awake)',tip:'Despierto '+nf(h(n.awake_seconds),2)+' h'}]}});
   const l7=ns.slice(-7),bef=l7.filter(n=>!lateBed(n.sleep_start)).length,ah=avg(l7.map(n=>n.sleep_hours)),as=avg(l7.map(n=>n.sleep_score));
-  const kp=`<div class="grid g4" style="margin-bottom:14px">${kpi('Sueño medio (7 noches)',nf(ah,1),'h','objetivo ≥ 7,3 h',ah>=7.3?'up':'wa')}${kpi('Puntuación media',nf(as,0),'','Garmin','neu')}${kpi('Dormido antes de 23:30',bef,'/7','objetivo ≥ 5 de 7',bef>=5?'up':'wa')}${kpi('Body Battery',nf(st.body_battery_current,0),'','estrés medio '+nf(st.avg_stress_level,0),'neu')}</div>`;
+  const kp=`<div class="grid g4" style="margin-bottom:14px">${kpi('Sueño medio · 7 noches',nf(ah,1),'h','',ah>=7.3?'up':'wa')}${kpi('Puntuación media',nf(as,0),'','','neu')}${kpi('Antes de 23:30',bef,'/7','',bef>=5?'up':'wa')}${kpi('Body Battery',nf(st.body_battery_current,0),'','','neu')}</div>`;
   const sl=card('Sueño por noche',barChart({items,h:260,refs:[{y:7.3,l:'objetivo 7,3 h'}]})+`<div class="leg"><span style="--c:var(--deep)">Profundo</span><span style="--c:var(--light)">Ligero</span><span style="--c:var(--rem)">REM</span><span style="--c:var(--awake)">Despierto</span></div><div class="note">Línea punteada = objetivo 7,3 h. Debajo de cada barra: hora a la que te dormiste (naranja = pasada la 23:30).</div>`);
   const hv=(D.hrv?.trend||[]).slice().sort((a,b)=>a.date<b.date?-1:1).slice(-UI.rS);const X=d=>Date.parse(d+'T12:00:00Z');
   const xt=hv.filter((_,i)=>i%Math.max(1,Math.ceil(hv.length/6))===0).map(x=>({x:X(x.date),l:dShort(x.date)}));
@@ -523,7 +524,7 @@ T.cuerpo=function(){
   const ks=Object.keys(wk).sort();
   const rows=ks.map((k,i)=>{const a=avg(wk[k]),p=i?avg(wk[ks[i-1]]):null,d=p!=null?a-p:null;return `<tr><td>S${weekNum(k)} · ${dShort(k)}</td><td class="n">${nf(a,2)} kg</td><td class="n ${d==null?'':d<=-0.15?'up':d>=0.15?'down':'neu'}">${d==null?'–':(d>0?'+':'')+nf(d,2)}</td><td class="n">${wk[k].length}</td></tr>`}).join('');
   const cur=ma[ma.length-1].v,first=mav[0].v; 
-  const kp=`<div class="grid g3 wkt" style="margin-bottom:14px">${kpi('Media 7 días',nf(cur,2),'kg','último pesaje '+nf(ws[ws.length-1].weight_kg)+' kg','neu')}${kpi('Cambio en el periodo',(cur-first>0?'+':'')+nf(cur-first,2),'kg','de '+dShort(wsv[0].date)+' a '+dShort(ws[ws.length-1].date),cur-first<=0?'up':'wa')}${wg?kpi('Para el objetivo ('+nf(wg.kg)+' kg)',nf(cur-wg.kg,1),'kg',(wg.date?'a '+dShort(wg.date)+' · '+diffDays(today(),wg.date)+' días':'sin fecha límite'),'neu'):kpi('Objetivo de peso','–','','añádelo abajo en Objetivos','neu')}</div>`;
+  const kp=`<div class="grid g3 wkt" style="margin-bottom:14px">${kpi('Media 7 días',nf(cur,2),'kg','','neu')}${kpi('Cambio en el periodo',(cur-first>0?'+':'')+nf(cur-first,2),'kg','',cur-first<=0?'up':'wa')}${wg?kpi('Para el objetivo ('+nf(wg.kg)+' kg)',nf(cur-wg.kg,1),'kg','','neu'):kpi('Objetivo de peso','–','','','neu')}</div>`;
   return `<div class="mb">${card('Objetivos',goalsHTML(true),'toca uno para editarlo')}</div>`+`<div class="toolbar">${seg('rW',[[14,'14 días'],[30,'30 días'],[0,'Todo']],UI.rW)}</div>`+kp+`<div class="grid g21">${card('Peso corporal',ch+`<div class="leg"><span style="--c:var(--wt)">Media móvil 7 días</span><span style="--c:rgba(251,191,36,.55)">Pesaje diario</span></div>`,'Garmin Connect')}${card('Media semanal',`<div class="tw"><table><tr><th>Semana</th><th class="n">Media</th><th class="n">Δ</th><th class="n">n</th></tr>${rows}</table></div><div class="note">Regla de tu plan: si 2 semanas con pérdida &lt;0,3 kg/semana, recortar ≈150 kcal; si &gt;0,9, subir ≈150. El peso sube con la creatina al principio: mira siempre la media.</div>`)}</div>`;
 };
 
@@ -637,15 +638,13 @@ T.semana=function(){
   }).join('');
   /* resumen semanal */
   const dk=dd(ag.km,pv?.km,1,' km',true),dv=dd(ag.vol/1000,pv?pv.vol/1000:null,1,' t',true),dh=dd(ag.hrv,pv?.hrv,0,' ms',true),dr=dd(ag.rhr,pv?.rhr,0,' ppm',false),dw=dd(ag.wt,pv?.wt,1,' kg',false),ds=dd(ag.sleep,pv?.sleep,1,' h',true);
-  const tiles=`<div class="grid g4 wkt">
-   ${kpi('Carrera · '+ag.r.length+' salidas',nf(ag.km,1),'km',dk[0]||hms(ag.rs),dk[1]||'neu')}
-   ${kpi('Fuerza · '+hms(ag.gs),ag.g.length,'/4',ag.sets+' series',ag.g.length>=4?'up':'neu')}
-   ${kpi('Volumen de fuerza',nf(ag.vol/1000,1),'t',dv[0],dv[1]||'neu')}
-   ${kpi('Sueño medio',ag.sleep!=null?nf(ag.sleep,1):'–','h',ds[0]||(ag.score!=null?'puntuación '+nf(ag.score,0):''),ds[1]||(ag.sleep>=7.3?'up':'wa'))}
+  const tiles=`<div class="grid g3 wkt">
+   ${kpi('Carrera',nf(ag.km,1),'km',dk[0]||'',dk[1]||'neu')}
+   ${kpi('Fuerza',ag.g.length,'/4','',ag.g.length>=4?'up':'neu')}
+   ${kpi('Sueño medio',ag.sleep!=null?nf(ag.sleep,1):'–','h',ds[0]||'',ds[1]||(ag.sleep>=7.3?'up':'wa'))}
    ${kpi('VFC media',nf(ag.hrv,0),'ms',dh[0],dh[1]||'neu')}
    ${kpi('FC en reposo',nf(ag.rhr,0),'ppm',dr[0],dr[1]||'neu')}
    ${kpi('Peso (media)',nf(ag.wt,1),'kg',dw[0],dw[1]||'neu')}
-   ${kpi('Plan cumplido',done+'/'+total,'sesiones',Math.round(done/total*100)+'% del plan semanal',done===total?'up':'neu')}
   </div>`;
   const nAct=days.reduce((a,x)=>a+x.items.length,0),nOpen=days.reduce((a,x)=>a+x.items.filter(i=>UI.open.has(i.id)).length,0);
   return hdr.replace('%%TOG%%',nAct&&nOpen===nAct?'Contraer todo':'Desplegar todo')+tiles+`<div id="wkdays">${cards}</div>`;
