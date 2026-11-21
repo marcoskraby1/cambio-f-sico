@@ -381,7 +381,7 @@ select{border:0;border-radius:16px;background:var(--card)}
   <section class="tab" id="t-cuerpo"></section>
   <footer>Datos de Hevy y Garmin Connect, sincronizados y cifrados.</footer>
 </div>
-<div class="sheet" id="sheet" hidden><div class="sb" data-act="close"></div><div class="sp"><div class="grab" id="grab"></div><div id="shc"></div></div></div>
+<div class="sheet" id="sheet" hidden><div class="sb" data-act="close"></div><div class="sp"><div class="grab"></div><div id="shc"></div></div></div>
 <div id="lock" style="display:none;position:fixed;inset:0;z-index:100;background:var(--bg);place-items:center;padding:24px">
   <form id="lockform" class="card" style="max-width:360px;width:100%;text-align:center">
     <div style="width:64px;height:64px;margin:0 auto 14px"><svg viewBox="0 0 120 120" aria-hidden="true" style="display:block;width:100%;height:100%"><use href="#logoc"/></svg></div>
@@ -898,9 +898,17 @@ addEventListener('scroll',()=>{if(tk)return;tk=requestAnimationFrame(()=>{tk=0;c
 let sx=0,sy=0,st=0;
 document.getElementById('t-semana').addEventListener('touchstart',e=>{if(e.touches.length!==1)return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now()},{passive:true});
 document.getElementById('t-semana').addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>80&&Math.abs(dy)<45&&Date.now()-st<600)act(dx<0?'wk-next':'wk-prev')},{passive:true});
-let gy=0;const grab=document.getElementById('grab');
-grab.addEventListener('touchstart',e=>{gy=e.touches[0].clientY},{passive:true});
-grab.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-gy>50)closeSheet()},{passive:true});
+/* hoja inferior: al llegar arriba del todo, seguir deslizando hacia abajo la cierra */
+{const sp=sheet.querySelector('.sp');let y0=0,t0=0,dy=0,drag=false;
+sheet.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;y0=e.touches[0].clientY;t0=Date.now();dy=0;drag=false},{passive:true});
+sheet.addEventListener('touchmove',e=>{if(e.touches.length!==1)return;const y=e.touches[0].clientY;
+  if(!drag&&sp.scrollTop>0){y0=y;t0=Date.now();return}
+  dy=y-y0;if(!drag&&dy<=0)return;
+  drag=true;if(e.cancelable)e.preventDefault();
+  sp.style.transition='none';sp.style.transform='translateY('+Math.max(0,dy)+'px)'},{passive:false});
+const end=()=>{if(!drag)return;drag=false;sp.style.transition='';sp.style.transform='';
+  const v=dy/Math.max(1,Date.now()-t0);if(dy>110||(dy>50&&v>.5))closeSheet()};
+sheet.addEventListener('touchend',end,{passive:true});sheet.addEventListener('touchcancel',end,{passive:true})}
 
 
 /* ───────────── datos: data.enc.json (cifrado, generado cada 30 min) ───────────── */
