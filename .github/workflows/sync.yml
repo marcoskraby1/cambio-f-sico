@@ -42,7 +42,7 @@ jobs:
           HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
         run: python sync.py
       - name: Preparar web
-        run: cp index.html manifest.webmanifest sw.js icon-*.png site/
+        run: cp index.html nuevo.html manifest.webmanifest sw.js icon-*.png site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
