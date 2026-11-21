@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Forma</title>
+<title>Forma 2 · vista previa</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#090a0c">
 <meta name="color-scheme" content="dark">
@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
+<script>try{var u=JSON.parse(localStorage.getItem("cf_v2")||"{}"),t=u.theme||"dark";if(t==="auto")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";var e=document.documentElement;e.dataset.theme=t;e.dataset.accent=u.accent||"teal";e.dataset.dens=u.dens||"cozy"}catch(x){}</script>
 <style>
 :root{
   --bg:#090a0c;--card:#151a21;--card2:#1b212a;--line:rgba(255,255,255,.08);
@@ -241,6 +242,107 @@ html.nosc{overflow:hidden}
 .frow{display:flex;gap:10px}.frow label{flex:1}
 .pres{display:flex;flex-wrap:wrap;gap:6px}.pres button{font:600 12.5px var(--font);color:var(--text);background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:7px 12px}
 .gedit{padding:10px;margin:0 -10px;border-radius:14px}.gedit:active{background:rgba(255,255,255,.04)}
+/* ===== Forma 2: estilo nuevo ===== */
+:root{--ac:#4fd1c5;--ringt:rgba(255,255,255,.09);--r:26px}
+html[data-accent=violet]{--ac:#a78bfa}html[data-accent=orange]{--ac:#fb923c}html[data-accent=pink]{--ac:#f472b6}html[data-accent=green]{--ac:#4ade80}
+html[data-theme=black]{--bg:#000;--card:#0e0f12;--card2:#17181d}
+html[data-theme=light]{--bg:#f2efe9;--card:#fff;--card2:#f5f3ee;--line:rgba(20,22,30,.08);--text:#16181d;--mut:#5b6270;--dim:#8a909b;--run:#0f9e90;--str:#7c4ddb;--hrv:#059669;--rhr:#e11d48;--wt:#d97706;--warn:#ea580c;--good:#16a34a;--bad:#dc2626;--ringt:rgba(20,22,30,.09);color-scheme:light}
+html[data-theme=light] .card{box-shadow:0 1px 2px rgba(20,22,30,.05),0 8px 24px rgba(20,22,30,.05)}
+html[data-theme=light] .bar,html[data-theme=light] .lb{background:rgba(20,22,30,.08)}
+html[data-theme=light] td{border-bottom-color:rgba(20,22,30,.06)}
+html[data-theme=light] .rr{border-top-color:rgba(20,22,30,.06)}
+html[data-theme=light] button.btn:active{background:var(--card2)}
+html[data-theme=light] .ic i.g{color:#6d28d9}html[data-theme=light] .ic i.r{color:#0f766e}
+html[data-theme=light] .sheet .sb{background:rgba(20,22,30,.4)}
+html[data-theme=light] .grab{background:rgba(20,22,30,.2)}
+html[data-theme=light] .sheet input{color-scheme:light}
+html[data-theme=light] svg text[fill="#cdd5e3"]{fill:#16181d}
+html[data-theme=light] svg text[fill="#9aa4b5"]{fill:#5b6270}
+html[data-theme=light] svg [stroke="rgba(255,255,255,.07)"],html[data-theme=light] svg [stroke="rgba(255,255,255,.08)"]{stroke:rgba(20,22,30,.1)}
+body{background:var(--bg)}
+h1{font-size:21px;font-weight:700;letter-spacing:-.02em}
+.card{border:0;border-radius:var(--r);padding:18px}
+.card h3{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);font-weight:650}
+.kpi{padding:16px}.kpi .v{font-size:32px;font-weight:700;letter-spacing:-.03em}
+.kpi .l{font-size:12px;font-weight:600}
+.chip,.day,.sess,.dcard{border-radius:20px}
+.pop{background:var(--card);border-color:var(--line)}
+.pop .pi{text-decoration:none;color:var(--text)}
+.avatar{background:color-mix(in srgb,var(--ac) 22%,var(--card));border:0;color:var(--text)}
+.avatar[aria-expanded=true]{box-shadow:0 0 0 2px var(--ac)}
+.pill{background:var(--card);border:0}
+button.btn{background:var(--card);border:0}
+.btn.pri{background:var(--ac);color:#071513}
+.bar i,.lb i{background:var(--ac)}
+.seg button.on,.pres button.on{background:color-mix(in srgb,var(--ac) 22%,transparent);color:var(--text)}
+.pres button.on{box-shadow:inset 0 0 0 1.5px var(--ac)}
+.lnk{color:var(--ac)}
+:focus-visible{outline-color:var(--ac)}
+.tfx{background:linear-gradient(to bottom,color-mix(in srgb,var(--bg) 82%,transparent) 0,color-mix(in srgb,var(--bg) 50%,transparent) 50%,transparent 100%)}
+#subtitle{display:block!important;font-size:12px}
+.sheet .sp{background:var(--card);border:0;border-radius:30px 30px 0 0}
+/* barra inferior: burbuja flotante y transparente (cristal) */
+nav{background:color-mix(in srgb,var(--card) 48%,transparent)!important;-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:1px solid rgba(255,255,255,.16)!important;box-shadow:0 10px 30px rgba(0,0,0,.35)!important}
+html[data-theme=light] nav{border-color:rgba(20,22,30,.1)!important;box-shadow:0 10px 30px rgba(20,22,30,.14)!important}
+nav a{color:var(--mut)}
+nav a.on{background:color-mix(in srgb,var(--ac) 22%,transparent)!important;color:var(--text)!important}
+nav a.on svg{stroke:var(--ac)!important}
+body::after{background:linear-gradient(to top,color-mix(in srgb,var(--bg) 78%,transparent) 0,transparent 100%)!important;height:calc(80px + env(safe-area-inset-bottom))!important}
+html[data-dens=compact]{--r:20px}
+html[data-dens=compact] .card{padding:12px}html[data-dens=compact] .grid{gap:8px}html[data-dens=compact] .kpi{padding:12px}html[data-dens=compact] .kpi .v{font-size:26px}
+/* portada */
+.hero{display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 24%,var(--card)),var(--card) 72%)}
+.hero .hk{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);font-weight:650}
+.hero .hs{font-size:25px;font-weight:700;line-height:1.15;margin:6px 0 14px;letter-spacing:-.02em}
+.hm{display:flex;gap:16px}.hm span{display:block;font-size:11.5px;color:var(--mut)}.hm b{display:block;font-size:19px;color:var(--text);font-weight:650}
+.rg{position:relative;width:124px;height:124px;flex:none}.rg svg{width:124px;height:124px;transform:rotate(-90deg)}
+.rg .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center}.rg b{font-size:33px;font-weight:700;line-height:1;display:block}.rg span{font-size:11.5px;color:var(--mut);display:block}
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.tl{border-radius:var(--r);padding:16px;background:color-mix(in srgb,var(--c) 17%,var(--card));min-width:0;cursor:pointer}
+.tl .tk{font-size:12px;font-weight:600;color:var(--mut)}
+.tl .tv{font-size:36px;font-weight:700;letter-spacing:-.03em;line-height:1.1;margin:6px 0 10px}
+.tl .tv small{font-size:14px;font-weight:600;color:var(--mut);margin-left:3px;letter-spacing:0}
+.tl .tb{height:6px;border-radius:99px;background:color-mix(in srgb,var(--c) 24%,transparent)}.tl .tb i{display:block;height:100%;border-radius:99px;background:var(--c)}
+.tl .tn{font-size:12px;color:var(--mut);margin-top:8px}
+.hoy{margin-bottom:12px}.hoy .pl{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.hoy .cs{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.hoy .cs i{font-style:normal;padding:7px 13px;border-radius:99px;font-size:13px;font-weight:600;background:var(--card2);color:var(--mut)}
+.hoy .cs i.ok{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}
+.wk7{display:flex;justify-content:space-between;gap:4px}
+.wk7 div{flex:1;text-align:center;font-size:11.5px;font-weight:600;color:var(--dim)}
+.wk7 i{display:block;width:26px;height:26px;border-radius:50%;margin:6px auto 0;border:2px solid var(--line);font-style:normal;line-height:22px;font-size:13px;color:#fff}
+.wk7 i.ok{background:var(--good);border-color:var(--good)}
+.wk7 i.miss{border-color:var(--warn)}
+.wk7 i.rest{border-style:dashed}
+.wk7 div.td{color:var(--ac)}.wk7 div.td i{border-color:var(--ac)}
+.last2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.last2 .big{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+.last2 .mt{font-size:12.5px;color:var(--mut);margin-top:4px}
+.set h4{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:16px 0 8px}
+.sw{display:flex;gap:10px}.sw button{width:40px;height:40px;border-radius:50%;border:0;background:var(--c);cursor:pointer}.sw button.on{box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--c)}
+.set a.cl{display:block;margin-top:18px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:380px){.hero .hs{font-size:22px}.rg,.rg svg{width:108px;height:108px}}
+
+/* ===== el mismo estilo en toda la app ===== */
+section.tab[data-title]::before{content:attr(data-title);display:block;font-size:30px;font-weight:700;letter-spacing:-.03em;margin:2px 2px 14px;line-height:1.1}
+.kpi{background:color-mix(in srgb,var(--kc,#7c8799) 15%,var(--card))}
+#t-fuerza{--kc:var(--str)}#t-carrera{--kc:var(--run)}#t-recuperacion{--kc:#818cf8}#t-cuerpo{--kc:var(--wt)}
+#t-semana .kpi:nth-child(1){--kc:var(--run)}#t-semana .kpi:nth-child(2){--kc:var(--str)}#t-semana .kpi:nth-child(3){--kc:#818cf8}
+#t-semana .kpi:nth-child(4){--kc:var(--hrv)}#t-semana .kpi:nth-child(5){--kc:var(--rhr)}#t-semana .kpi:nth-child(6){--kc:var(--wt)}
+select{border:0;border-radius:16px;background:var(--card)}
+.seg{background:var(--card);border:0}
+.dcard{border:0;background:var(--card)}
+.dcard.today{box-shadow:inset 0 0 0 2px var(--ac)}.dcard.today .dn{color:var(--ac)}
+.wnav .btn.sq{background:var(--card)}
+/* las 6 tarjetas de resumen de la semana: cuadrados compactos, 3 por fila */
+.wkt{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+.wkt .kpi{aspect-ratio:1/1;padding:11px 10px 9px;border-radius:22px;justify-content:space-between}
+.wkt .kpi .l{font-size:11px;line-height:1.2;margin:0}
+.wkt .kpi .v{font-size:25px}.wkt .kpi .v small{font-size:11px;margin-left:2px}
+.wkt .kpi .d{font-size:10.5px;line-height:1.2;margin-top:2px}
+
+.wkt .kpi{justify-content:flex-start}.wkt .kpi .l{margin-bottom:auto}
+.wkt .kpi:not(:has(.d))::after{content:"";display:block;height:13px;margin-top:2px}
 </style>
 </head>
 <body>
@@ -254,12 +356,12 @@ html.nosc{overflow:hidden}
         <div class="pop" id="pop" role="menu" hidden>
           <div class="ph"><b>Marcos</b><span>Hevy + Garmin Connect</span></div>
           <button class="pi" role="menuitem" data-go="cuerpo">Mis objetivos</button>
+          <button class="pi" role="menuitem" id="pset">Ajustes</button>
           <button class="pi" role="menuitem" id="pref">Actualizar ahora</button>
           <button class="pi" role="menuitem" id="ghtok">Clave de GitHub</button>
           <button class="pi" role="menuitem" id="chpass">Cambiar clave de datos</button>
-          <a class="pi" role="menuitem" href="nuevo.html">Probar Forma 2 (vista previa)</a>
         </div></div>
-      <div><h1>Forma</h1><div class="sub" id="subtitle">Hevy + Garmin Connect</div></div>
+      <div><h1 id="greet">Forma</h1><div class="sub" id="subtitle"></div></div>
     </div>
     <div class="live">
       <span class="pill" id="pdata"><i class="dot"></i><span>Cargando…</span></span>
@@ -916,7 +1018,101 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&!rl){rl=true;location.reload()}});
   addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 }
-(function init(){clearData();go(location.hash.slice(1)||'resumen');status();load()})();
+/* ===================== Forma 2 ===================== */
+const V2K='cf_v2';
+const UI2=(()=>{const d={theme:'dark',accent:'teal',dens:'cozy',home:'resumen'};try{return Object.assign(d,JSON.parse(localStorage.getItem(V2K)||'{}'))}catch(e){return d}})();
+const THEME_BG={dark:'#090a0c',black:'#000000',light:'#f2efe9'};
+function applyV2(){
+  const de=document.documentElement;let th=UI2.theme;
+  if(th==='auto')th=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  de.dataset.theme=th;de.dataset.accent=UI2.accent;de.dataset.dens=UI2.dens;
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=THEME_BG[th]||'#090a0c';
+}
+function greet(){
+  const h=new Date().getHours(),g=document.getElementById('greet'),s=document.getElementById('subtitle');
+  if(g)g.textContent=h<6?'Buenas noches':h<13?'Buenos días':h<21?'Buenas tardes':'Buenas noches';
+  if(s)s.textContent=new Intl.DateTimeFormat('es-ES',{weekday:'short',day:'numeric',month:'short'}).format(new Date()).replace(/\./g,'');
+}
+const SET_OPTS={
+  theme:[['dark','Oscuro'],['black','Negro'],['light','Claro'],['auto','Auto']],
+  dens:[['cozy','Cómoda'],['compact','Compacta']],
+  home:[['resumen','Resumen'],['semana','Semana'],['fuerza','Fuerza'],['carrera','Carrera'],['recuperacion','Sueño'],['cuerpo','Cuerpo']]
+};
+const ACC=[['teal','#4fd1c5'],['violet','#a78bfa'],['orange','#fb923c'],['pink','#f472b6'],['green','#4ade80']];
+function settingsHTML(){
+  const opts=k=>`<div class="pres">${SET_OPTS[k].map(([v,l])=>`<button type="button" class="${UI2[k]===v?'on':''}" data-v2="${k}" data-v="${v}">${l}</button>`).join('')}</div>`;
+  const sw=`<div class="sw">${ACC.map(([v,c])=>`<button type="button" aria-label="${v}" class="${UI2.accent===v?'on':''}" style="--c:${c}" data-v2="accent" data-v="${v}"></button>`).join('')}</div>`;
+  return `<div class="sht">Ajustes</div><div class="set"><h4>Tema</h4>${opts('theme')}<h4>Color</h4>${sw}<h4>Tarjetas</h4>${opts('dens')}<h4>Pestaña de inicio</h4>${opts('home')}</div>`;
+}
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-v2]');if(!el)return;
+  UI2[el.dataset.v2]=el.dataset.v;try{localStorage.setItem(V2K,JSON.stringify(UI2))}catch(x){}
+  applyV2();shc.innerHTML=settingsHTML();mark(TABS,true);vib(8);
+});
+document.getElementById('pset').addEventListener('click',()=>openSheet(settingsHTML()));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)greet()});
+
+function ring2(pct,color,big,small){
+  const r=54,c=2*Math.PI*r,p=Math.max(0,Math.min(1,pct/100));
+  return `<div class="rg"><svg viewBox="0 0 128 128"><circle cx="64" cy="64" r="${r}" fill="none" stroke="var(--ringt)" stroke-width="12"/><circle cx="64" cy="64" r="${r}" fill="none" stroke="${color}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}"/></svg><div class="c"><div><b>${big}</b><span>${small}</span></div></div></div>`;
+}
+T.resumen=function(){
+  const td=today(),ws=weekStart(td);
+  const rd=(D.readiness||[])[0]||{},st=D.stats||{},ns=NIGHTS(),last=ns[ns.length-1];
+  const hv=(D.hrv?.trend||[]).slice().sort((a,b)=>a.date<b.date?-1:1),hl=hv[hv.length-1];
+  const p5=D.pred?.predictions?.['5K']?.time_seconds,r35=p5?p5*Math.pow(3.5/5,1.06):null;
+  const dTest=diffDays(td,'2026-12-08'),dRace=diffDays(td,'2026-12-31');
+  const wt=WEIGHTS(),ma=movAvg(wt),wa=ma.length?ma[ma.length-1].v:null;
+  const prev=ma.length?ma.filter(m=>m.date<=addDays(ma[ma.length-1].date,-7)).pop():null;
+  const dW=(wa!=null&&prev)?wa-prev.v:null;
+  const gym=W(),runs=A().slice().sort((a,b)=>a.start_time<b.start_time?1:-1);
+  const lvl=rd.score>=75?'var(--good)':rd.score>=50?'var(--wt)':'var(--bad)';
+  const fb=({WELL_RECOVERED:'Bien recuperado',READY_TO_GO:'Listo para entrenar',RECOVERED_AND_READY:'Recuperado y listo'})[rd.feedback]||String(rd.feedback||'Sin datos').replace(/_/g,' ').toLowerCase();
+  const sg=sleepGoal();
+  const hero=`<div class="card hero"><div><div class="hk">Preparación de hoy</div><div class="hs">${esc(fb.charAt(0).toUpperCase()+fb.slice(1))}</div><div class="hm"><span><b>${last?nf(last.sleep_hours,1)+' h':'–'}</b>sueño</span><span><b>${nf(hl?.last_night_avg_hrv_ms,0)}</b>VFC</span><span><b>${nf(st.resting_heart_rate_bpm,0)}</b>reposo</span></div></div>${ring2(rd.score??0,lvl,rd.score??'–',rd.level?String(rd.level).toLowerCase():'')}</div>`;
+  const stepsPct=Math.min(100,(st.total_steps||0)/10000*100),sleepPct=last?Math.min(100,last.sleep_hours/sg.h*100):0,bb=st.body_battery_current;
+  const bento=`<div class="bento">
+   <div class="tl" style="--c:var(--run)" data-go="carrera"><div class="tk">Pasos hoy</div><div class="tv">${nf(st.total_steps,0)}</div><div class="tb"><i style="width:${stepsPct.toFixed(0)}%"></i></div></div>
+   <div class="tl" style="--c:#818cf8" data-go="recuperacion"><div class="tk">Sueño anoche</div><div class="tv">${last?nf(last.sleep_hours,1):'–'}<small>h</small></div><div class="tb"><i style="width:${sleepPct.toFixed(0)}%"></i></div></div>
+   <div class="tl" style="--c:var(--wt)" data-go="cuerpo"><div class="tk">Peso (media 7 d)</div><div class="tv">${nf(wa,1)}<small>kg</small></div>${dW!=null?`<div class="tn">${dW>0?'+':''}${nf(dW,1)} kg esta semana</div>`:''}</div>
+   <div class="tl" style="--c:var(--hrv)" data-go="recuperacion"><div class="tk">Body Battery</div><div class="tv">${nf(bb,0)}</div><div class="tb"><i style="width:${Math.max(0,Math.min(100,bb||0))}%"></i></div></div>
+  </div>`;
+  const idx=Math.max(0,Math.min(6,diffDays(ws,td))),pl=PLAN[idx]||['',0,0];
+  const dG=gym.some(x=>x.day===td),dR=runs.some(x=>x.day===td);
+  let cs='';
+  if(pl[1]||dG)cs+=`<i class="${dG?'ok':''}">${dG?'✓ ':''}Fuerza</i>`;
+  if(pl[2]||dR)cs+=`<i class="${dR?'ok':''}">${dR?'✓ ':''}Carrera</i>`;
+  if(!cs)cs='<i>Día de descanso</i>';
+  const hoy=`<div class="card hoy tap" data-go="semana"><h3>Hoy toca</h3><div class="pl">${pl[0]||'Libre'}</div><div class="cs">${cs}</div></div>`;
+  let w7='';
+  for(let i=0;i<7;i++){
+    const d=addDays(ws,i),p=PLAN[i],g=gym.some(x=>x.day===d),r=runs.some(x=>x.day===d),done=(p[1]?g:true)&&(p[2]?r:true)&&(p[1]||p[2]||g||r),planned=p[1]||p[2];
+    const cls=!planned&&!g&&!r?'rest':done?'ok':d<td?'miss':'';
+    w7+=`<div class="${d===td?'td':''}">${'LMXJVSD'[i]}<i class="${cls}">${cls==='ok'?'✓':''}</i></div>`;
+  }
+  const week=`<div class="card tap mb" data-go="semana" data-wk="${ws}"><h3>Esta semana</h3><div class="wk7">${w7}</div></div>`;
+  const chips=[];
+  const hw=hl?.weekly_avg_hrv_ms;
+  if(hw!=null)chips.push(hw>=78?['good',`VFC semanal <b>${hw} ms</b> ≥ 78 → techo Z2 <b>155 ppm</b>`]:['warn',`VFC semanal <b>${hw} ms</b> &lt; 78 → techo Z2 <b>152 ppm</b>`]);
+  if(last)chips.push(last.sleep_hours<6.5?['warn',`Dormiste <b>${nf(last.sleep_hours)} h</b> (&lt;6,5): recorta intensidad`]:['good',`Sueño <b>${nf(last.sleep_hours)} h</b> · OK para entrenar`]);
+  const bef=ns.slice(-7).filter(n=>!lateBed(n.sleep_start)).length;
+  if(ns.length)chips.push(bef>=5?['good',`<b>${bef}/7</b> noches dormido antes de ${sg.bed}`]:['warn',`Solo <b>${bef}/7</b> noches dormido antes de ${sg.bed}`]);
+  const rhrs=ns.slice(-3).map(n=>n.resting_heart_rate_bpm).filter(Boolean);
+  if(rhrs.length&&rhrs.every(v=>v>=51))chips.push(['bad','FC reposo ≥51 tres días seguidos: recorta intensidad']);
+  if(D.status?.acwr_status)chips.push([D.status.acwr_status==='OPTIMAL'?'good':'warn',`Carga aguda/crónica <b>${nf(D.status.load_ratio,2)}</b> · ${esc(String(D.status.acwr_status).toLowerCase())}`]);
+  const sig=`<div class="mb">${card('Señales del preparador',`<div class="chips">${chips.map(c=>`<span class="chip ${c[0]}">${c[1]}</span>`).join('')||'<div class="empty">Sin datos todavía</div>'}</div>`)}</div>`;
+  const cd=`<div class="card mb"><h3>Cuenta atrás</h3><div class="count"><div><div class="n">${dTest>0?dTest:'—'}</div><div class="t">días al test</div></div><div><div class="n">${dRace>0?dRace:'—'}</div><div class="t">días a la carrera</div></div><div><div class="n">${r35?mmss(r35):'–'}</div><div class="t">3,5K estimado</div></div></div></div>`;
+  const lr=runs[0],lg=gym[0];
+  const last2=`<div class="last2">
+   <div class="card tap" ${lr?`data-run="${lr.id}"`:''}><h3>Última carrera</h3>${lr?`<div class="big">${nf(lr.km,2)} km</div><div class="mt">${pace(lr.duration_seconds,lr.distance_meters)} · ${hms(lr.duration_seconds)}</div>`:'<div class="empty">Sin datos</div>'}</div>
+   <div class="card tap" ${lg?`data-go="semana" data-wk="${weekStart(lg.day)}"`:''}><h3>Última fuerza</h3>${lg?`<div class="big">${esc(lg.title)}</div><div class="mt">${hms(lg.dur)} · ${lg.sets} series</div>`:'<div class="empty">Sin datos</div>'}</div></div>`;
+  const goals=`<div class="tap" data-go="cuerpo">${card('Objetivos',goalsHTML(false))}</div>`;
+  return hero+bento+hoy+week+sig+cd+last2+goals;
+};
+document.querySelectorAll('section.tab').forEach(s=>{const n={semana:'Semana',fuerza:'Fuerza',carrera:'Carrera',recuperacion:'Sueño',cuerpo:'Cuerpo'}[s.id.slice(2)];if(n)s.dataset.title=n});
+applyV2();greet();
+
+(function init(){clearData();go(location.hash.slice(1)||UI2.home||'resumen');status();load()})();
 </script>
 </body>
 </html>
