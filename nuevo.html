@@ -281,13 +281,13 @@ button.btn{background:var(--card);border:0}
 .tfx{background:linear-gradient(to bottom,color-mix(in srgb,var(--bg) 82%,transparent) 0,color-mix(in srgb,var(--bg) 50%,transparent) 50%,transparent 100%)}
 #subtitle{display:block!important;font-size:12px}
 .sheet .sp{background:var(--card);border:0;border-radius:30px 30px 0 0}
-/* barra inferior: acoplada, a todo el ancho */
-nav{left:0!important;right:0!important;bottom:0!important;border-radius:28px 28px 0 0!important;border:0!important;padding:8px 10px calc(10px + env(safe-area-inset-bottom))!important;background:var(--card)!important;box-shadow:0 -10px 34px rgba(0,0,0,.22)!important}
-nav a{border-radius:18px!important;color:var(--dim)}
-nav a.on{background:color-mix(in srgb,var(--ac) 18%,transparent)!important;color:var(--text)!important}
+/* barra inferior: burbuja flotante y transparente (cristal) */
+nav{background:color-mix(in srgb,var(--card) 48%,transparent)!important;-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:1px solid rgba(255,255,255,.16)!important;box-shadow:0 10px 30px rgba(0,0,0,.35)!important}
+html[data-theme=light] nav{border-color:rgba(20,22,30,.1)!important;box-shadow:0 10px 30px rgba(20,22,30,.14)!important}
+nav a{color:var(--mut)}
+nav a.on{background:color-mix(in srgb,var(--ac) 22%,transparent)!important;color:var(--text)!important}
 nav a.on svg{stroke:var(--ac)!important}
-nav.mini a{padding:8px 2px!important;gap:3px!important}nav.mini a span{max-height:14px!important;opacity:1!important}nav.mini a svg{transform:none!important}
-body::after{display:none!important}
+body::after{background:linear-gradient(to top,color-mix(in srgb,var(--bg) 78%,transparent) 0,transparent 100%)!important;height:calc(80px + env(safe-area-inset-bottom))!important}
 html[data-dens=compact]{--r:20px}
 html[data-dens=compact] .card{padding:12px}html[data-dens=compact] .grid{gap:8px}html[data-dens=compact] .kpi{padding:12px}html[data-dens=compact] .kpi .v{font-size:26px}
 /* portada */
