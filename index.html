@@ -422,6 +422,9 @@ let ver=0;
 const memo=fn=>{let v=-1,r;return()=>{if(v!==ver){r=fn();v=ver}return r}};
 const UI={wk:null,autoWk:null,open:new Set(),metric:'w',rW:30,rS:7};
 const vib=(ms=8)=>{try{const H=window.Capacitor?.Plugins?.Haptics;if(H)H.impact({style:'LIGHT'}).catch(()=>{});else navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
+/* APK: pasa a la parte Android la frase, los objetivos y el plan (widgets y notificaciones). En el navegador no hace nada. */
+const NATIVE=()=>window.Capacitor?.Plugins?.FormaNative;
+const toApk=()=>{try{const F=NATIVE();if(F)F.configure({pass:LS.get('cf_pass')||'',goals:JSON.stringify(GOALS),plan:JSON.stringify(PLAN)}).catch(()=>{})}catch(e){}};
 
 /* ───────────── gráficos SVG ───────────── */
 function niceTicks(lo,hi,n=4){const span=hi-lo||1,raw=span/n,p=Math.pow(10,Math.floor(Math.log10(raw)));const st=[1,2,2.5,5,10].map(m=>m*p).find(s=>s>=raw)||raw;const a=Math.floor(lo/st)*st,t=[];for(let v=a;v<=hi+st*.001;v+=st)t.push(+v.toFixed(6));return t}
@@ -770,7 +773,7 @@ T.semana=function(){
 const GK='cf_goals';
 const DEF_GOALS=[{id:'g1',t:'peso',kg:73.5,date:'2026-12-31'},{id:'g2',t:'fuerza',ex:'Press de Banca (Barra)',kg:80,reps:1},{id:'g3',t:'carrera',km:3.5,sec:840},{id:'g4',t:'carrera',km:5,sec:1200}];
 let GOALS=(()=>{try{const j=JSON.parse(localStorage.getItem(GK)||'null');if(Array.isArray(j))return j}catch(e){}return DEF_GOALS.map(g=>({...g}))})();
-const saveGoals=()=>{try{localStorage.setItem(GK,JSON.stringify(GOALS))}catch(e){}};
+const saveGoals=()=>{try{localStorage.setItem(GK,JSON.stringify(GOALS))}catch(e){}toApk()};
 /* objetivo de sueño: se añade una sola vez; si lo borras no vuelve */
 try{if(!GOALS.some(g=>g.t==='sueno')&&!localStorage.getItem('cf_sg')){GOALS.push({id:'g5',t:'sueno',h:7.3,bed:'23:30'});saveGoals();localStorage.setItem('cf_sg','1')}}catch(e){}
 const num=v=>parseFloat(String(v).trim().replace(',','.'));
@@ -861,6 +864,7 @@ function openRun(id){
 async function act(a,el){
   if(a==='close')return closeSheet();
   if(a==='gdel'){if(UI.gf&&confirm('¿Borrar este objetivo?')){GOALS=GOALS.filter(x=>x.id!==UI.gf.g.id);saveGoals();closeSheet();mark(['cuerpo','resumen'],true)}return}
+  if(a==='ntest'){try{NATIVE()?.testNotification().catch(()=>{})}catch(e){}vib();if(el)el.textContent='Enviada ✓';return}
   if(a==='share'){const tx=T._share||'';try{const S=window.Capacitor?.Plugins?.Share;if(S)await S.share({title:'Forma',text:tx,dialogTitle:'Compartir'});else if(navigator.share)await navigator.share({title:'Forma',text:tx});else{await navigator.clipboard.writeText(tx);if(el){el.textContent='Copiado ✓';setTimeout(()=>el.textContent='Compartir',1500)}}}catch(e){}return}
   if(a==='wk-prev'&&UI.wk>W1)UI.wk=addDays(UI.wk,-7);
   else if(a==='wk-next'&&UI.wk<weekStart(today()))UI.wk=addDays(UI.wk,7);
@@ -931,7 +935,7 @@ function applyData(j){
     if(w.exercises)hev.det.set(w.id,{exercises:w.exercises});
   });
   meta.at=j.generated_at?Date.parse(j.generated_at):Date.now();meta.errors=(j.errors||[]).filter(e=>!/^rundet-/.test(e));meta.ok=true;
-  ver++;mark(TABS,true);status();
+  ver++;mark(TABS,true);status();toApk();
 }
 function clearData(){KEYS.forEach(k=>D[k]=null);hev.list.clear();hev.det.clear();ver++;lastSig='';mark(TABS)}
 function showLock(msg){const l=document.getElementById('lock');l.style.display='grid';if(msg)document.getElementById('lockmsg').textContent=msg;setTimeout(()=>document.getElementById('pass').focus(),50)}
@@ -1016,7 +1020,7 @@ document.getElementById('ghtok').addEventListener('click',e=>{e.preventDefault()
   if(v===null||v==='(ya guardada)')return;
   const t=v.trim();if(t){LS.set('cf_gh',t);syncMsg='Clave guardada. Pulsa Actualizar';status();setTimeout(()=>{syncMsg='';status()},4000)}else{LS.del('cf_gh');syncMsg='Clave borrada';status();setTimeout(()=>{syncMsg='';status()},3000)}
 });
-document.getElementById('chpass').addEventListener('click',e=>{e.preventDefault();LS.del('cf_pass');clearData();meta.ok=false;lastSig='';status();showLock('Escribe la nueva clave.')});
+document.getElementById('chpass').addEventListener('click',e=>{e.preventDefault();LS.del('cf_pass');toApk();clearData();meta.ok=false;lastSig='';status();showLock('Escribe la nueva clave.')});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 addEventListener('online',()=>load());
 setInterval(()=>{if(!document.hidden){load();status()}},5*60e3);
@@ -1050,7 +1054,7 @@ const ACC=[['teal','#4fd1c5'],['violet','#a78bfa'],['orange','#fb923c'],['pink',
 function settingsHTML(){
   const opts=k=>`<div class="pres">${SET_OPTS[k].map(([v,l])=>`<button type="button" class="${UI2[k]===v?'on':''}" data-v2="${k}" data-v="${v}">${l}</button>`).join('')}</div>`;
   const sw=`<div class="sw">${ACC.map(([v,c])=>`<button type="button" aria-label="${v}" class="${UI2.accent===v?'on':''}" style="--c:${c}" data-v2="accent" data-v="${v}"></button>`).join('')}</div>`;
-  return `<div class="sht">Ajustes</div><div class="set"><h4>Tema</h4>${opts('theme')}<h4>Color</h4>${sw}<h4>Tarjetas</h4>${opts('dens')}<h4>Pestaña de inicio</h4>${opts('home')}</div>`;
+  return `<div class="sht">Ajustes</div><div class="set"><h4>Tema</h4>${opts('theme')}<h4>Color</h4>${sw}<h4>Tarjetas</h4>${opts('dens')}<h4>Pestaña de inicio</h4>${opts('home')}${NATIVE()?'<h4>Notificaciones</h4><button type="button" class="btn" data-act="ntest">Enviar notificación de prueba</button>':''}</div>`;
 }
 document.addEventListener('click',e=>{
   const el=e.target.closest('[data-v2]');if(!el)return;
