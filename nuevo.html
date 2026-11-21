@@ -322,6 +322,27 @@ html[data-dens=compact] .card{padding:12px}html[data-dens=compact] .grid{gap:8px
 .sw{display:flex;gap:10px}.sw button{width:40px;height:40px;border-radius:50%;border:0;background:var(--c);cursor:pointer}.sw button.on{box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--c)}
 .set a.cl{display:block;margin-top:18px;color:var(--mut);font-size:13px;text-align:center}
 @media(max-width:380px){.hero .hs{font-size:22px}.rg,.rg svg{width:108px;height:108px}}
+
+/* ===== el mismo estilo en toda la app ===== */
+section.tab[data-title]::before{content:attr(data-title);display:block;font-size:30px;font-weight:700;letter-spacing:-.03em;margin:2px 2px 14px;line-height:1.1}
+.kpi{background:color-mix(in srgb,var(--kc,#7c8799) 15%,var(--card))}
+#t-fuerza{--kc:var(--str)}#t-carrera{--kc:var(--run)}#t-recuperacion{--kc:#818cf8}#t-cuerpo{--kc:var(--wt)}
+#t-semana .kpi:nth-child(1){--kc:var(--run)}#t-semana .kpi:nth-child(2){--kc:var(--str)}#t-semana .kpi:nth-child(3){--kc:#818cf8}
+#t-semana .kpi:nth-child(4){--kc:var(--hrv)}#t-semana .kpi:nth-child(5){--kc:var(--rhr)}#t-semana .kpi:nth-child(6){--kc:var(--wt)}
+select{border:0;border-radius:16px;background:var(--card)}
+.seg{background:var(--card);border:0}
+.dcard{border:0;background:var(--card)}
+.dcard.today{box-shadow:inset 0 0 0 2px var(--ac)}.dcard.today .dn{color:var(--ac)}
+.wnav .btn.sq{background:var(--card)}
+/* las 6 tarjetas de resumen de la semana: cuadrados compactos, 3 por fila */
+.wkt{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+.wkt .kpi{aspect-ratio:1/1;padding:11px 10px 9px;border-radius:22px;justify-content:space-between}
+.wkt .kpi .l{font-size:11px;line-height:1.2;margin:0}
+.wkt .kpi .v{font-size:25px}.wkt .kpi .v small{font-size:11px;margin-left:2px}
+.wkt .kpi .d{font-size:10.5px;line-height:1.2;margin-top:2px}
+
+.wkt .kpi{justify-content:flex-start}.wkt .kpi .l{margin-bottom:auto}
+.wkt .kpi:not(:has(.d))::after{content:"";display:block;height:13px;margin-top:2px}
 </style>
 </head>
 <body>
@@ -1089,6 +1110,7 @@ T.resumen=function(){
   const goals=`<div class="tap" data-go="cuerpo">${card('Objetivos',goalsHTML(false))}</div>`;
   return hero+bento+hoy+week+sig+cd+last2+goals;
 };
+document.querySelectorAll('section.tab').forEach(s=>{const n={semana:'Semana',fuerza:'Fuerza',carrera:'Carrera',recuperacion:'Sueño',cuerpo:'Cuerpo'}[s.id.slice(2)];if(n)s.dataset.title=n});
 applyV2();greet();
 
 (function init(){clearData();go(location.hash.slice(1)||UI2.home||'resumen');status();load()})();
